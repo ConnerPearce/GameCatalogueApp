@@ -8,15 +8,15 @@
     <Application.Resources>
         <ResourceDictionary>
             <Style x:Key="Heading" TargetType="Label">
-                <Setter Property="FontSize" Value="Header"/>
+                <Setter Property="FontSize" Value="Large"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
                 <Setter Property="HorizontalTextAlignment" Value="Center"/>
                 <Setter Property="VerticalTextAlignment" Value="Center"/>
             </Style>
-
+            
             <!-- NAVIGATION STYLES -->
             <Style x:Key="NavigationButton" TargetType="Button">
-                <Setter Property="FontSize" Value="Micro"/>
+                <Setter Property="FontSize" Value="Small"/>
                 <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
                 <Setter Property="VerticalOptions" Value="FillAndExpand"/>
                 

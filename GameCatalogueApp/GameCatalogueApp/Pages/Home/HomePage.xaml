@@ -9,20 +9,36 @@
              NavigationPage.HasNavigationBar="False">
 
     <ContentPage.Content>
-        <StackLayout>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- LOGIN BAR -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="Login" 
                         Style="{StaticResource NavigationButton}"   
-                        Grid.Column="2"/>
-            </Grid>
-        </StackLayout>
-       
+                        Grid.Column="2" />
 
+            </Grid>
+            <!-- END OF LOGIN BAR -->
+
+            <Label Style="{StaticResource Heading}" Text="Welcome to the Video Game Catalogue" Margin="10" Grid.Row="2"/>
+
+            <SearchBar x:Name="txtSearchBar" Placeholder="Search for games..."  Grid.Row="3"/>
+
+        </Grid>
     </ContentPage.Content>
 
 
