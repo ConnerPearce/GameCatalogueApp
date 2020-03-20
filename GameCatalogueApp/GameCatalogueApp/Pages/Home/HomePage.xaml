@@ -12,7 +12,6 @@
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -46,18 +45,7 @@
             </ContentView>
             <!-- END OF LOGIN BAR -->
             <!-- LOGIN BAR -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Button x:Name="btnLogin" 
-                        Style="{StaticResource NavigationButton}"   
-                        Grid.Column="2" 
-                        Clicked="btnLogin_Clicked"/>
 
-            </Grid>
 
 
           
