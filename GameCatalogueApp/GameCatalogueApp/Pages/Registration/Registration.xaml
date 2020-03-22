@@ -4,12 +4,31 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="GameCatalogueApp.Pages.Registration.Registration">
+             x:Class="GameCatalogueApp.Pages.Registration.Registration"
+             NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid Margin="30" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="AUto"/>
+                <RowDefinition Height="AUto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Text="Register" HorizontalOptions="Center" Style="{StaticResource Heading}"/>
+
+            <Editor x:Name="txtUserName" Placeholder="Username" Grid.Row="1" />
+            <Editor x:Name="txtFName" Placeholder="First Name" Grid.Row="2" />
+            <Editor x:Name="txtLName" Placeholder="Last Name" Grid.Row="3" />
+            <Editor x:Name="txtEmail" Placeholder="Email" Grid.Row="4" />
+            <Editor x:Name="txtPassword" Placeholder="Password" Grid.Row="5" />
+            <Editor x:Name="txtConfirmedPwrd" Placeholder="Confirm Password" Grid.Row="6"/>
+
+            <Button x:Name="btnRegister" Text="Sign Up" Clicked="btnRegister_Clicked" Grid.Row="7" HorizontalOptions="CenterAndExpand" WidthRequest="300"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

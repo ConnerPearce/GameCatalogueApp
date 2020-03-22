@@ -12,6 +12,7 @@
 
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -20,6 +21,9 @@
             </Grid.RowDefinitions>
             <!-- Pop up Login -->
             <ContentView x:Name="popupLoginView" BackgroundColor="Gray" Padding="10, 0" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" Grid.RowSpan="6">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="StackLayout_Tapped" NumberOfTapsRequired="1"/>
+                </ContentView.GestureRecognizers>
                 <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                     <StackLayout Orientation="Vertical" HeightRequest="200" WidthRequest="300" BackgroundColor="White" Opacity="1">
                         <Entry x:Name="uName" Margin="20,20,20,10" Placeholder="Enter Username"/>
@@ -43,12 +47,21 @@
                     </StackLayout>
                 </StackLayout>
             </ContentView>
-            <!-- END OF LOGIN BAR -->
             <!-- LOGIN BAR -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="btnLogin" 
+                        Style="{StaticResource NavigationButton}"   
+                        Grid.Column="2" 
+                        Clicked="btnLogin_Clicked"/>
 
+            </Grid>
+            <!-- END OF LOGIN BAR -->
 
-
-          
 
             <Label x:Name="lblWelcomeMessage" Style="{StaticResource Heading}" Text="Welcome to the Video Game Catalogue" Margin="10" Grid.Row="2"/>
 

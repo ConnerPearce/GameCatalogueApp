@@ -7,19 +7,14 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace GameCatalogueApp.Pages.Registration
+namespace GameCatalogueApp.Pages.Search
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Registration : ContentPage
+    public partial class Search : ContentPage
     {
-        public Registration()
+        public Search()
         {
             InitializeComponent();
-        }
-
-        private void btnRegister_Clicked(object sender, EventArgs e)
-        {
-
         }
     }
 }

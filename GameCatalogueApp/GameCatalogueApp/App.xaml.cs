@@ -9,7 +9,7 @@ namespace GameCatalogueApp
     {
         public App()
         {
-            InitializeComponent();
+            InitializeComponent();           
             MainPage = new NavigationPage(new HomePage());
         }
 
