@@ -15,6 +15,8 @@ namespace GameCatalogueApp.API
         // USED FOR DEPENDANCY INJECTION
         private readonly string _baseAddress;
 
+        public delegate void ErrorMessage(string message);
+
         public GameProxy(string baseAddress)
         {
             // Injects the base address during build time, allows one spot for all information that may need changing
@@ -22,7 +24,7 @@ namespace GameCatalogueApp.API
         }
 
         // GET ALL GAMES
-        public async Task<IGameRootObject> GetAllGameInfo()
+        public async Task<IGameRootObject> GetAllGameInfo(ErrorMessage errorMessage)
         {
             var http = new HttpClient
             {
@@ -39,14 +41,14 @@ namespace GameCatalogueApp.API
             }
             else
             {
-                await Application.Current.MainPage.DisplayAlert("There was an error", response.ReasonPhrase, "Ok");
+                errorMessage(response.ReasonPhrase);
                 return null;
             }
         }
 
 
         // GAME SEARCH PROXY
-        public async Task<IGameRootObject> GetGameBySearch(string search)
+        public async Task<IGameRootObject> GetGameBySearch(string search, ErrorMessage errorMessage)
         {
             var http = new HttpClient
             {
@@ -63,7 +65,7 @@ namespace GameCatalogueApp.API
             }
             else
             {
-                await Application.Current.MainPage.DisplayAlert("There was an error", response.ReasonPhrase, "Ok");
+                errorMessage(response.ReasonPhrase);
                 return null;
             }
 

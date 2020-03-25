@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autofac;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,6 @@ namespace GameCatalogueApp.Pages.Home
         }
 
         // LOGIN POP UP
-        // The Registration label is clickable
         private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             // Navigate to registration page
@@ -40,6 +40,11 @@ namespace GameCatalogueApp.Pages.Home
         private void StackLayout_Tapped(object sender, EventArgs e)
         {
             ChangeVisibility();
+        }       
+
+        private async void searchBarGame_SearchButtonPressed(object sender, EventArgs e)
+        {
+           await Navigation.PushAsync(new Search.Search(searchBarGame.Text));
         }
 
         private void ChangeVisibility()
@@ -48,13 +53,13 @@ namespace GameCatalogueApp.Pages.Home
             {
                 popupLoginView.IsVisible = false;
                 lblWelcomeMessage.IsVisible = true;
-                txtSearchBar.IsVisible = true;
+                searchBarGame.IsVisible = true;
             }
             else
             {
                 popupLoginView.IsVisible = true;
                 lblWelcomeMessage.IsVisible = false;
-                txtSearchBar.IsVisible = false;
+                searchBarGame.IsVisible = false;
             }
         }
     }

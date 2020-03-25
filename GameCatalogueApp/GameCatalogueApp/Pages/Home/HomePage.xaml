@@ -65,7 +65,7 @@
 
             <Label x:Name="lblWelcomeMessage" Style="{StaticResource Heading}" Text="Welcome to the Video Game Catalogue" Margin="10" Grid.Row="2"/>
 
-            <SearchBar x:Name="txtSearchBar" Placeholder="Search for games..."  Grid.Row="3" />
+            <SearchBar x:Name="searchBarGame" Placeholder="Search for games..."  Grid.Row="3" SearchButtonPressed="searchBarGame_SearchButtonPressed" />
 
 
         </Grid>
