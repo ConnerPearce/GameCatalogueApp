@@ -56,8 +56,18 @@
             </Grid>
             <!-- END OF LOGIN BAR -->
 
-            <ListView Grid.Row="1">
-                
+
+            <ActivityIndicator x:Name="activityIndicator" Margin="0,50,0,0" VerticalOptions="Center" HorizontalOptions="Center" Color="Black" WidthRequest="30" HeightRequest="30" Grid.RowSpan="1"/>
+            <ListView x:Name="lstGames" Grid.Row="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal">
+                            <StackLayout Orientation="Vertical">
+                                <Label Text="{Binding name}"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
 
         </Grid>

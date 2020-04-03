@@ -44,7 +44,8 @@ namespace GameCatalogueApp.Pages.Home
 
         private async void searchBarGame_SearchButtonPressed(object sender, EventArgs e)
         {
-           await Navigation.PushAsync(new Search.Search(searchBarGame.Text));
+            string message = searchBarGame.Text;
+            await Navigation.PushAsync(new Search.Search(message));
         }
 
         private void ChangeVisibility()

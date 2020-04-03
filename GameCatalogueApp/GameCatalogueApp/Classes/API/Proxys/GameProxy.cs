@@ -36,7 +36,7 @@ namespace GameCatalogueApp.API
             HttpResponseMessage response = http.GetAsync(url).Result;
             if (response.IsSuccessStatusCode)
             {
-                var games = response.Content.ReadAsAsync<IGameRootObject>();
+                var games = response.Content.ReadAsAsync<GameRootObject>();
                 return await games;
             }
             else
@@ -60,7 +60,7 @@ namespace GameCatalogueApp.API
             HttpResponseMessage response = http.GetAsync(url).Result;
             if (response.IsSuccessStatusCode)
             {
-                var games = response.Content.ReadAsAsync<IGameRootObject>();
+                var games = response.Content.ReadAsAsync<GameRootObject>();
                 return await games;
             }
             else

@@ -5,7 +5,7 @@ using Xamarin.Essentials;
 
 namespace GameCatalogueApp.Classes.ConnectionManager
 {
-    public class CheckConnection
+    public class CheckConnection : ICheckConnection
     {
         public delegate void ConnectionAlert(string message);
 
@@ -25,6 +25,6 @@ namespace GameCatalogueApp.Classes.ConnectionManager
         }
 
 
- 
+
     }
 }

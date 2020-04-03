@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Autofac;
+using GameCatalogueApp.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +14,36 @@ namespace GameCatalogueApp.Pages.Search
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Search : ContentPage
     {
-        private readonly string _searchItem;
+        private string _searchItem;
+        private IContainer container;
         public Search(string searchItem)
         {
             InitializeComponent();
-            searchItem = _searchItem;
+            _searchItem = searchItem;            
             searchBarGame.Text = _searchItem;
+            activityIndicator.IsRunning = true;
+            StartSearch();
+        }
+
+        public async void StartSearch()
+        {
+            container = DependancyInjection.Configure();
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var app = scope.Resolve<ISearchBackend>();
+                var games = await app.GetGames(_searchItem, DisplayError);
+                if (games != null)
+                {
+                    lstGames.ItemsSource = games.results;
+                    activityIndicator.IsRunning = false;
+                }
+
+            }
+        }
+
+        private async void DisplayError(string error)
+        {
+            await DisplayAlert("Uh Oh!", $"Error info: {error}", "Ok");
         }
 
         private void StackLayout_Tapped(object sender, EventArgs e)
