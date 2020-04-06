@@ -12,8 +12,9 @@ namespace GameCatalogueApp
     // This class manages dependancy intjection
     public static class DependancyInjection
     {
-        public static int RootObject { get; private set; }
-
+        // This method contains all variable injections
+        // It also manages All classes and returns them as their Interface Counterparts where needed
+        // It can also instantiate variables at build time
         public static IContainer Configure()
         {
             var builder = new ContainerBuilder();

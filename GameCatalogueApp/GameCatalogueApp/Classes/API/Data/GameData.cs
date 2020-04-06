@@ -18,12 +18,12 @@ namespace GameCatalogueApp.API.Data
 
     public class AddedByStatus
     {
-        public int yet { get; set; }
-        public int owned { get; set; }
-        public int beaten { get; set; }
-        public int toplay { get; set; }
-        public int dropped { get; set; }
-        public int playing { get; set; }
+        public double yet { get; set; }
+        public double owned { get; set; }
+        public double beaten { get; set; }
+        public double toplay { get; set; }
+        public double dropped { get; set; }
+        public double playing { get; set; }
     }
 
     public class Platform2
@@ -31,10 +31,7 @@ namespace GameCatalogueApp.API.Data
         public int id { get; set; }
         public string name { get; set; }
         public string slug { get; set; }
-        public object image { get; set; }
-        public object year_end { get; set; }
-        public object year_start { get; set; }
-        public int games_count { get; set; }
+        public double games_count { get; set; }
         public string image_background { get; set; }
     }
 
@@ -137,17 +134,16 @@ namespace GameCatalogueApp.API.Data
         public bool tba { get; set; }
         public string background_image { get; set; }
         public double rating { get; set; }
-        public int rating_top { get; set; }
+        public double rating_top { get; set; }
         public List<Rating> ratings { get; set; }
-        public int ratings_count { get; set; }
-        public int reviews_text_count { get; set; }
-        public int added { get; set; }
+        public double ratings_count { get; set; }
+        public double reviews_text_count { get; set; }
+        public double added { get; set; }
         public AddedByStatus added_by_status { get; set; }
-        public int? metacritic { get; set; }
-        public int playtime { get; set; }
-        public int suggestions_count { get; set; }
-        public object user_game { get; set; }
-        public int reviews_count { get; set; }
+        public double? metacritic { get; set; }
+        public double playtime { get; set; }
+        public double suggestions_count { get; set; }
+        public double reviews_count { get; set; }
         public string saturated_color { get; set; }
         public string dominant_color { get; set; }
         public List<Platform> platforms { get; set; }
@@ -161,20 +157,20 @@ namespace GameCatalogueApp.API.Data
 
     public class Year2
     {
-        public int year { get; set; }
-        public int count { get; set; }
+        public DateTime year { get; set; }
+        public double count { get; set; }
         public bool nofollow { get; set; }
     }
 
     public class Year
     {
-        public int from { get; set; }
-        public int to { get; set; }
+        public DateTime from { get; set; }
+        public DateTime to { get; set; }
         public string filter { get; set; }
         public int decade { get; set; }
         public List<Year2> years { get; set; }
         public bool nofollow { get; set; }
-        public int count { get; set; }
+        public double count { get; set; }
     }
 
     public class Filters
@@ -184,9 +180,8 @@ namespace GameCatalogueApp.API.Data
 
     public class GameRootObject : IGameRootObject
     {
-        public int count { get; set; }
+        public double count { get; set; }
         public string next { get; set; }
-        public object previous { get; set; }
         public List<Result> results { get; set; }
         public string seo_title { get; set; }
         public string seo_description { get; set; }

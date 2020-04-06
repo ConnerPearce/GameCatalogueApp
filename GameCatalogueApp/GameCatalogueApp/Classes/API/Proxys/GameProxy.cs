@@ -50,6 +50,7 @@ namespace GameCatalogueApp.API
         // GAME SEARCH PROXY
         public async Task<IGameRootObject> GetGameBySearch(string search, ErrorMessage errorMessage)
         {
+
             var http = new HttpClient
             {
                 BaseAddress = new Uri(_baseAddress)

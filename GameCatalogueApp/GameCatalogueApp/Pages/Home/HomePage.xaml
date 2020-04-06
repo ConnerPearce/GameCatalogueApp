@@ -48,7 +48,7 @@
                 </StackLayout>
             </ContentView>
             <!-- LOGIN BAR -->
-            <Grid>
+            <Grid HeightRequest="50">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
