@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autofac;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace GameCatalogueApp.Pages.Registration
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Registration : ContentPage
     {
+        private IContainer container;
+
         public Registration()
         {
             InitializeComponent();
@@ -20,6 +23,11 @@ namespace GameCatalogueApp.Pages.Registration
         private void btnRegister_Clicked(object sender, EventArgs e)
         {
 
+        }
+
+        private async void DisplayAlert(string message)
+        {
+            await DisplayAlert("Something went wrong", $"Error info: {message}", "Ok");
         }
     }
 }

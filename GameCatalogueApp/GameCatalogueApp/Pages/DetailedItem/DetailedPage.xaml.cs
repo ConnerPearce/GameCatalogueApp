@@ -16,5 +16,20 @@ namespace GameCatalogueApp.Pages.DetailedItem
         {
             InitializeComponent();
         }
+
+        private void StackLayout_Tapped(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnLogin_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }

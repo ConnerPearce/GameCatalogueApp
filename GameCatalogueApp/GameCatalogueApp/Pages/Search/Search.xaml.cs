@@ -28,7 +28,7 @@ namespace GameCatalogueApp.Pages.Search
         // Begins Dependancy Injection for all asosciated Classes
         // Uses AutoFac for dependancy injection
         // NEEDS TO BE CALLED FOR EACH PAGE
-        public async void ItemSearch(string search)
+        private async void ItemSearch(string search)
         {
             activityIndicator.IsRunning = true;
             container = DependancyInjection.Configure();
@@ -50,7 +50,7 @@ namespace GameCatalogueApp.Pages.Search
         // HANDLES ALL ERROR MESSAGES //
         private async void DisplayError(string error)
         {
-            await DisplayAlert("Uh Oh!", $"Error info: {error}", "Ok");
+            await DisplayAlert("Something went wrong", $"Error info: {error}", "Ok");
         }
 
         private void StackLayout_Tapped(object sender, EventArgs e)
@@ -94,9 +94,9 @@ namespace GameCatalogueApp.Pages.Search
             }
         }
 
-        private void lstGames_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void lstGames_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-
+            await Navigation.PushAsync(new DetailedItem.DetailedPage());
         }
     }
 }

@@ -4,12 +4,130 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="GameCatalogueApp.Pages.DetailedItem.DetailedPage">
+             x:Class="GameCatalogueApp.Pages.DetailedItem.DetailedPage"
+             NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid Margin="15" RowSpacing="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <!-- Pop up Login -->
+            <ContentView x:Name="popupLoginView" BackgroundColor="Gray" Padding="10, 0" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" Grid.RowSpan="6">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="StackLayout_Tapped" NumberOfTapsRequired="1"/>
+                </ContentView.GestureRecognizers>
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <StackLayout Orientation="Vertical" HeightRequest="200" WidthRequest="300" BackgroundColor="White" Opacity="1">
+                        <Entry x:Name="uName" Margin="20,20,20,10" Placeholder="Enter Username"/>
+                        <Entry x:Name="pWord" Margin="20,0,20,0" Placeholder="Enter Password"/>
+                        <StackLayout Orientation="Horizontal" Margin="20,0,20,0">
+                            <StackLayout Orientation="Vertical">
+                                <StackLayout Orientation="Horizontal">
+                                    <CheckBox x:Name="chkRememberMe" IsChecked="True"/>
+                                    <Label Text="Remember Me" Margin="0" VerticalOptions="Center"/>
+                                </StackLayout>
+                                <Label x:Name="btnRegister" Text="Register" Margin="40,0,0,0" TextColor="BlueViolet">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired="1"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </StackLayout>
+                            <StackLayout Orientation="Vertical">
+                                <Button Margin="10,0,10,0" Text="Login"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </ContentView>
+            <!-- LOGIN BAR -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="btnLogin"
+                        Style="{StaticResource NavigationButton}"   
+                        Grid.Column="2" 
+                        Clicked="btnLogin_Clicked"/>
+
+            </Grid>
+            <!-- END OF LOGIN BAR -->
+
+            <Label x:Name="lblGameName" Text="[Game Name]" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Large" Grid.Row="1"/>
+
+            <Grid Grid.Row="2"> 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- GENRE -->
+                <Label x:Name="lblGenre">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Genre: " FontAttributes="Bold"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                
+                <!-- DEVELOPER -->
+                <Label x:Name="lblDeveloper" Grid.Row="1">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Developer: " FontAttributes="Bold"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                
+                <!-- PLATFORMS -->
+                <Label x:Name="lblPlatforms" Text="Platforms: " Grid.Row="2">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Platforms: " FontAttributes="Bold"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                
+                <!-- RATING -->
+                <Label x:Name="lblRating" Text="Rating: " Grid.Row="3">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Rating: " FontAttributes="Bold"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <!-- IMAGE -->
+                <Image x:Name="imgGamePhoto" Grid.Column="1" Grid.RowSpan="4"/>
+            </Grid>
+
+            <Label x:Name="lblSummary" Text="Summary: " Grid.Row="3">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Summary: " FontAttributes="Bold"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <StackLayout Orientation="Horizontal" Grid.Row="5" Spacing="0">
+                <Button x:Name="btnCompleted" Text="Add To Completed" VerticalOptions="Fill" HorizontalOptions="FillAndExpand"/>
+                <Button x:Name="btnWishlist" Text="Add to Wishlist" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+
+
+
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

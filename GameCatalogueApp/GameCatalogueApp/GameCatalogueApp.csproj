@@ -32,8 +32,4 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Classes\Custom_API\" />
-  </ItemGroup>
 </Project>
