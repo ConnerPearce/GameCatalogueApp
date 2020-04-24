@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="GameCatalogueApp.Pages.Login.Login"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+
+            </Grid.RowDefinitions>
+
+            <Label Text="Login" FontSize="Title" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/> 
+
+            <Entry x:Name="txtUsername" Placeholder="Username...." Grid.Row="1" Margin="25"/>
+            <Entry x:Name="txtPassword" Placeholder="Password...." IsPassword="True" Grid.Row="2" Margin="25"/>
+
+            <Grid Grid.Row="3" Margin="25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackLayout Orientation="Vertical">
+                    <CheckBox x:Name="chkRemember" IsChecked="True"/>
+                    <Label Text="Remember me"/>
+                </StackLayout>
+                <Button x:Name="btnRegistration" Text="Register" Clicked="btnRegistration_Clicked" Grid.Column="2"/>
+
+            </Grid>
+            <Button x:Name="btnLogin" Text="Login" Clicked="Login_Clicked" Grid.Row="4" BackgroundColor="LightSeaGreen" HeightRequest="65" WidthRequest="150" HorizontalOptions="Center"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -24,6 +24,11 @@ namespace GameCatalogueApp.Pages.Search
             ItemSearch(searchItem);
         }
 
+        // The Method for Alert Displays that will be passed using delegates
+        // HANDLES ALL ERROR MESSAGES //
+        private async void DisplayError(string error) => await DisplayAlert("Something went wrong", $"Error info: {error}", "Ok");
+        // LOGIN BUTTON
+        private void btnLogin_Clicked(object sender, EventArgs e) => Navigation.PushAsync(new Login.Login());
 
         // Begins Dependancy Injection for all asosciated Classes
         // Uses AutoFac for dependancy injection
@@ -46,23 +51,17 @@ namespace GameCatalogueApp.Pages.Search
             }
         }
 
-        // The Method for Alert Displays that will be passed using delegates
-        // HANDLES ALL ERROR MESSAGES //
-        private async void DisplayError(string error)
+        private async void lstGames_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            await DisplayAlert("Something went wrong", $"Error info: {error}", "Ok");
-        }
-
-        private void StackLayout_Tapped(object sender, EventArgs e)
-        {
-            ChangeVisibility();
-        }
-
-        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
-        {
-            // Navigate to registration page
-            ChangeVisibility();
-            await Navigation.PushAsync(new Registration.Registration());
+            try
+            {
+                var item = (Result)e.SelectedItem;
+                await Navigation.PushAsync(new DetailedItem.DetailedPage(item.slug));
+            }
+            catch
+            {
+                DisplayError("Unable to select this item");
+            }
         }
 
         private void searchBarGame_SearchButtonPressed(object sender, EventArgs e)
@@ -74,29 +73,6 @@ namespace GameCatalogueApp.Pages.Search
             else
                 DisplayError("Enter a game to search for");
         }
-
-        private void btnLogin_Clicked(object sender, EventArgs e)
-        {
-            ChangeVisibility();
-        }
-
-        private void ChangeVisibility()
-        {
-            if (popupLoginView.IsVisible)
-            {
-                popupLoginView.IsVisible = false;
-                searchBarGame.IsVisible = true;
-            }
-            else
-            {
-                popupLoginView.IsVisible = true;
-                searchBarGame.IsVisible = false;
-            }
-        }
-
-        private async void lstGames_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            await Navigation.PushAsync(new DetailedItem.DetailedPage());
-        }
+        
     }
 }

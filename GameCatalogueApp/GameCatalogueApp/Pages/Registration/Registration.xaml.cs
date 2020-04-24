@@ -25,9 +25,7 @@ namespace GameCatalogueApp.Pages.Registration
 
         }
 
-        private async void DisplayAlert(string message)
-        {
-            await DisplayAlert("Something went wrong", $"Error info: {message}", "Ok");
-        }
+        private async void DisplayAlert(string message) => await DisplayAlert("Something went wrong", $"Error info: {message}", "Ok");
+
     }
 }

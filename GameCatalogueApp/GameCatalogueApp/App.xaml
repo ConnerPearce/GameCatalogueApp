@@ -21,7 +21,7 @@
                 <Setter Property="VerticalOptions" Value="FillAndExpand"/>
                 
                 <!-- TEXT BELOW -->
-                <Setter Property="Text" Value="Login/Register"/>
+                <Setter Property="Text" Value="Login"/>
             </Style>
             
         </ResourceDictionary>

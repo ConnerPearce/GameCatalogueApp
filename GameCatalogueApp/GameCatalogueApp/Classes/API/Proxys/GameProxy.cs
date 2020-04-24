@@ -1,4 +1,5 @@
 ﻿using GameCatalogueApp.API.Data;
+using GameCatalogueApp.Classes.API.Data;
 using GameCatalogueApp.Pages.Home;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,7 @@ namespace GameCatalogueApp.API
 
 
         // GAME SEARCH PROXY
+        // Gets games by a search
         public async Task<IGameRootObject> GetGameBySearch(string search, ErrorMessage errorMessage)
         {
 
@@ -63,6 +65,31 @@ namespace GameCatalogueApp.API
             {
                 var games = response.Content.ReadAsAsync<GameRootObject>();
                 return await games;
+            }
+            else
+            {
+                errorMessage(response.ReasonPhrase);
+                return null;
+            }
+
+        }
+
+        // Single Game
+        // Gets a single game's information based on unique identifier called a slug
+        public async Task<ISingleGameRootObject> GetSinlgeGameInfo(string slug, ErrorMessage errorMessage)
+        {
+            var http = new HttpClient
+            {
+                BaseAddress = new Uri(_baseAddress)
+            };
+            http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue(AppInfo.Name, AppInfo.VersionString));
+
+            var url = $"games/{slug}";
+            HttpResponseMessage response = http.GetAsync(url).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var game = response.Content.ReadAsAsync<SingleGameRootObject>();
+                return await game;
             }
             else
             {

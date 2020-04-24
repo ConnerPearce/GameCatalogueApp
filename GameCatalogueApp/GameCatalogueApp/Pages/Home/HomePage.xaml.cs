@@ -18,55 +18,20 @@ namespace GameCatalogueApp.Pages.Home
             InitializeComponent();
         }
 
-        /// LOGIN FUNCTIONS ///
-
         //LOGIN BUTTON
-        private void btnLogin_Clicked(object sender, EventArgs e)
-        {
-            // Shows the popup while making other content not visible
-            // An Issue came up where things would overlap which could not be fixed without using custom renderers
-            // Or custom Programming (Less generic program)
-            ChangeVisibility();
-        }
-
-        // LOGIN POP UP
-        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
-        {
-            // Navigate to registration page
-            ChangeVisibility();
-            await Navigation.PushAsync(new Registration.Registration());
-        }
-
-        private void StackLayout_Tapped(object sender, EventArgs e)
-        {
-            ChangeVisibility();
-        }       
+        private async void btnLogin_Clicked(object sender, EventArgs e) => await Navigation.PushAsync(new Login.Login());
 
         private async void searchBarGame_SearchButtonPressed(object sender, EventArgs e)
         {
             string message = searchBarGame.Text;
             if (!string.IsNullOrEmpty(message))
             {
+                activityIndicator.IsRunning = true;
                 await Navigation.PushAsync(new Search.Search(message));
+                activityIndicator.IsRunning = false;
             }
             else
-                await DisplayAlert("Uh Oh!", $"Error info: Enter a game to search for", "Ok");
-        }
-
-        private void ChangeVisibility()
-        {
-            if (popupLoginView.IsVisible)
-            {
-                popupLoginView.IsVisible = false;
-                lblWelcomeMessage.IsVisible = true;
-                searchBarGame.IsVisible = true;
-            }
-            else
-            {
-                popupLoginView.IsVisible = true;
-                lblWelcomeMessage.IsVisible = false;
-                searchBarGame.IsVisible = false;
-            }
+                await DisplayAlert("Something went wrong", $"Error info: Enter a game to search for", "Ok");
         }
     }
 }
