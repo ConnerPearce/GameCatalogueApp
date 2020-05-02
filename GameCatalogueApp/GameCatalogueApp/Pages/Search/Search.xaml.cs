@@ -51,19 +51,6 @@ namespace GameCatalogueApp.Pages.Search
             }
         }
 
-        private async void lstGames_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            try
-            {
-                var item = (Result)e.SelectedItem;
-                await Navigation.PushAsync(new DetailedItem.DetailedPage(item.slug));
-            }
-            catch
-            {
-                DisplayError("Unable to select this item");
-            }
-        }
-
         private void searchBarGame_SearchButtonPressed(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(searchBarGame.Text))
@@ -73,6 +60,19 @@ namespace GameCatalogueApp.Pages.Search
             else
                 DisplayError("Enter a game to search for");
         }
-        
+
+
+        private async void lstGames_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            try
+            {
+                var item = (Result)e.Item;
+                await Navigation.PushAsync(new DetailedItem.DetailedPage(item.slug));
+            }
+            catch
+            {
+                DisplayError("Unable to select this item");
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace GameCatalogueApp.Classes.API.Data
         int game_series_count { get; set; }
         List<Genre> genres { get; set; }
         int id { get; set; }
-        int metacritic { get; set; }
+        int? metacritic { get; set; }
         string metacritic_url { get; set; }
         int movies_count { get; set; }
         string name { get; set; }

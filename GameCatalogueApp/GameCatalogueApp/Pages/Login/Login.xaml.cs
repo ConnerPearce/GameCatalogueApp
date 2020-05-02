@@ -17,12 +17,16 @@ namespace GameCatalogueApp.Pages.Login
         {
             InitializeComponent();
         }
+        private async void btnRegistration_Clicked(object sender, EventArgs e) => await Navigation.PushAsync(new Registration.Registration());
 
         private void Login_Clicked(object sender, EventArgs e)
         {
 
         }
 
-        private async void btnRegistration_Clicked(object sender, EventArgs e) => await Navigation.PushAsync(new Registration.Registration());
+        private void chkRemember_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+
+        }
     }
 }

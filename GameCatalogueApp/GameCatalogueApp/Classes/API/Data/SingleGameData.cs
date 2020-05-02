@@ -146,7 +146,7 @@ namespace GameCatalogueApp.Classes.API.Data
         public string name { get; set; }
         public string name_original { get; set; }
         public string description { get; set; }
-        public int metacritic { get; set; }
+        public int? metacritic { get; set; }
         public string released { get; set; }
         public bool tba { get; set; }
         public DateTime updated { get; set; }

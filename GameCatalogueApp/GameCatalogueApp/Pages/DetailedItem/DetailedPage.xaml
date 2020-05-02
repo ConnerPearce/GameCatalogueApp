@@ -12,7 +12,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
@@ -20,7 +20,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="btnLogin"
@@ -88,8 +88,9 @@
                 <!-- IMAGE -->
                 <Image x:Name="imgGamePhoto" Grid.Column="1" Grid.RowSpan="4"/>
             </Grid>
-
-            <Label x:Name="lblSummary" TextType="Html" Grid.Row="3"/>
+            <ScrollView Grid.Row="3">
+                <Label x:Name="lblSummary" TextType="Html" />
+            </ScrollView>
             
             <StackLayout Orientation="Horizontal" Grid.Row="5" Spacing="0">
                 <Button x:Name="btnCompleted" Text="Add To Completed" VerticalOptions="Fill" HorizontalOptions="FillAndExpand"/>

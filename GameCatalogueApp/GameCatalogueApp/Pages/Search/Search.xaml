@@ -31,7 +31,7 @@
 
             <ActivityIndicator x:Name="activityIndicator" Margin="0,50,0,0" VerticalOptions="Center" HorizontalOptions="Center" Color="Black" WidthRequest="30" HeightRequest="30" Grid.RowSpan="1"/>
             
-            <ListView x:Name="lstGames" Grid.Row="1" HasUnevenRows="True" VerticalOptions="FillAndExpand" SeparatorColor="Black" SelectionMode="Single" ItemSelected="lstGames_ItemSelected">
+            <ListView x:Name="lstGames" Grid.Row="1" HasUnevenRows="True" VerticalOptions="FillAndExpand" SeparatorColor="Black" SelectionMode="Single" ItemTapped="lstGames_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

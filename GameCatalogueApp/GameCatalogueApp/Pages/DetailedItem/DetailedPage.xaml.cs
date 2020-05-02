@@ -42,7 +42,7 @@ namespace GameCatalogueApp.Pages.DetailedItem
                     lblDeveloper.Text = games.publishers.First().name;
                     foreach (var item in games.platforms)
                     {
-                        lblPlatforms.Text += $"{item}, ";
+                        lblPlatforms.Text += $"{item.platform.name}, ";
                     }
                     lblRating.Text = games.rating.ToString();
                     imgGamePhoto = new Image()
