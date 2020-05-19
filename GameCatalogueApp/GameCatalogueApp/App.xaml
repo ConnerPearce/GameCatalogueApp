@@ -19,9 +19,6 @@
                 <Setter Property="FontSize" Value="Small"/>
                 <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
                 <Setter Property="VerticalOptions" Value="FillAndExpand"/>
-                
-                <!-- TEXT BELOW -->
-                <Setter Property="Text" Value="Login"/>
             </Style>
             
         </ResourceDictionary>

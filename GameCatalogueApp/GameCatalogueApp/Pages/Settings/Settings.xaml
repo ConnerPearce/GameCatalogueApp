@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="GameCatalogueApp.Pages.Settings.Settings"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Text="Settings" FontSize="Large" HorizontalOptions="Center"/>
+            <TableView x:Name="tblAccountSettings" Intent="Menu" Grid.Row="1" IsVisible="True">
+                <TableRoot>
+                    <TableSection Title="Account Settings">
+                        <EntryCell x:Name="txtUname" Label="Username" Placeholder="Jack101..."/>
+                        <EntryCell x:Name="txtFName" Label="First Name" Placeholder="Jack..."/>
+                        <EntryCell x:Name="txtLName" Label="Last Name" Placeholder="Kline..."/>
+                        <EntryCell x:Name="txtEmail" Label="Email" Placeholder="JackDeNephalim@godmail.com"/>
+                        <EntryCell x:Name="txtPwrd" Label="Password" Placeholder="*****"/>
+                    </TableSection>
+                </TableRoot>
+            </TableView>
+
+            <TableView Intent="Settings" Grid.Row="2">
+                <TableRoot>
+                    <TableSection Title="Additional Settings">
+                        <SwitchCell Text="Remember Me"/>
+                        <SwitchCell Text="Use Multiple Search Sources" On="True"/>
+                    </TableSection>
+                </TableRoot>
+            </TableView>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

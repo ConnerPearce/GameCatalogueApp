@@ -27,24 +27,41 @@ namespace GameCatalogueApp.API
         // GET ALL GAMES
         public async Task<IGameRootObject> GetAllGameInfo(ErrorMessage errorMessage)
         {
-            var http = new HttpClient
+            try
             {
-                BaseAddress = new Uri(_baseAddress),
-            };
-            http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue(AppInfo.Name, AppInfo.VersionString));
+                var http = new HttpClient
+                {
+                    BaseAddress = new Uri(_baseAddress),
+                };
 
-            var url = "games";
-            HttpResponseMessage response = http.GetAsync(url).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                var games = response.Content.ReadAsAsync<GameRootObject>();
-                return await games;
+                // The prebuilt API requires http headers or API requests can be blocked
+                // The header just contains the app name and the version
+                http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue(AppInfo.Name, AppInfo.VersionString));
+
+                var url = "games";
+                HttpResponseMessage response = http.GetAsync(url).Result;
+                if (response.IsSuccessStatusCode)
+                {
+
+                    //If theres a succesful response return the content
+                    var games = response.Content.ReadAsAsync<GameRootObject>();
+                    return await games;
+                }
+                else
+                {
+
+                    // This is for if there is an error
+                    // The delegate will return what the error is to the main xaml and then the xaml will display a pop up detailing the error
+                    errorMessage(response.ReasonPhrase);
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                errorMessage(response.ReasonPhrase);
+                errorMessage(ex.Message);
                 return null;
             }
+            
         }
 
 
@@ -52,51 +69,82 @@ namespace GameCatalogueApp.API
         // Gets games by a search
         public async Task<IGameRootObject> GetGameBySearch(string search, ErrorMessage errorMessage)
         {
-
-            var http = new HttpClient
+            try
             {
-                BaseAddress = new Uri(_baseAddress)
-            };
-            http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue(AppInfo.Name, AppInfo.VersionString));
+                var http = new HttpClient
+                {
+                    BaseAddress = new Uri(_baseAddress)
+                };
 
-            var url = $"games?search={search}";
-            HttpResponseMessage response = http.GetAsync(url).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                var games = response.Content.ReadAsAsync<GameRootObject>();
-                return await games;
+                // The prebuilt API requires http headers or API requests can be blocked
+                // The header just contains the app name and the version
+                http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue(AppInfo.Name, AppInfo.VersionString));
+
+                var url = $"games?search={search}";
+                HttpResponseMessage response = http.GetAsync(url).Result;
+                if (response.IsSuccessStatusCode)
+                {
+
+                    //If theres a succesful response return the content
+                    var games = response.Content.ReadAsAsync<GameRootObject>();
+                    return await games;
+                }
+                else
+                {
+
+                    // This is for if there is an error
+                    // The delegate will return what the error is to the main xaml and then the xaml will display a pop up detailing the error
+                    errorMessage(response.ReasonPhrase);
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                errorMessage(response.ReasonPhrase);
-                return null;
+                errorMessage(ex.Message);
+                return null;            
             }
-
+         
         }
 
         // Single Game
         // Gets a single game's information based on unique identifier called a slug
         public async Task<ISingleGameRootObject> GetSinlgeGameInfo(string slug, ErrorMessage errorMessage)
         {
-            var http = new HttpClient
+            try
             {
-                BaseAddress = new Uri(_baseAddress)
-            };
-            http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue(AppInfo.Name, AppInfo.VersionString));
 
-            var url = $"games/{slug}";
-            HttpResponseMessage response = http.GetAsync(url).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                var game = response.Content.ReadAsAsync<SingleGameRootObject>();
-                return await game;
+                var http = new HttpClient
+                {
+                    BaseAddress = new Uri(_baseAddress)
+                };
+
+                // The prebuilt API requires http headers or API requests can be blocked
+                // The header just contains the app name and the version
+                http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue(AppInfo.Name, AppInfo.VersionString));
+
+                var url = $"games/{slug}";
+                HttpResponseMessage response = http.GetAsync(url).Result;
+                if (response.IsSuccessStatusCode)
+                {
+
+                    //If theres a succesful response return the content
+                    var game = response.Content.ReadAsAsync<SingleGameRootObject>();
+                    return await game;
+                }
+                else
+                {
+
+                    // This is for if there is an error
+                    // The delegate will return what the error is to the main xaml and then the xaml will display a pop up detailing the error
+                    errorMessage(response.ReasonPhrase);
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                errorMessage(response.ReasonPhrase);
+                errorMessage(ex.Message);
                 return null;
             }
-
         }
     }
 

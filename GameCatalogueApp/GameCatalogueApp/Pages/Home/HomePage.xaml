@@ -28,8 +28,13 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="btnLogin" 
                         Style="{StaticResource NavigationButton}"                        
-                        Grid.Column="2" 
+                        Grid.Column="2"
+                        Text="Login"
                         Clicked="btnLogin_Clicked"/>
+                <Button x:Name="btnUser" 
+                        Style="{StaticResource NavigationButton}"                        
+                        Grid.Column="2"
+                        Clicked="btnUser_Clicked"/>
 
             </Grid>
             <!-- END OF LOGIN BAR -->
