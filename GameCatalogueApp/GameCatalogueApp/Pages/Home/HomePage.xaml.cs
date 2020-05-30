@@ -17,14 +17,7 @@ namespace GameCatalogueApp.Pages.Home
     public partial class HomePage : ContentPage
     {
         public static bool isLoggedIn = false;
-        public static IUser user = new User 
-        { 
-            UName = "JoeT1", 
-            FName = "Joe", 
-            LName = "Trulo",
-            Email = "JoeTrulo@RealOnes.com", 
-            Pwrd = "JoeRulez" 
-        };
+        public static IUser user = new User();
 
 
         public HomePage()

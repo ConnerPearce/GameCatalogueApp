@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="GameCatalogueApp.Pages.Wishlist.Wishlist">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!-- LOGIN BAR -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <SearchBar x:Name="searchBarGame" Placeholder="Search for games..." SearchButtonPressed="searchBarGame_SearchButtonPressed" WidthRequest="210" HeightRequest="50" />
+                <Button x:Name="btnUser" 
+                        Style="{StaticResource NavigationButton}"                        
+                        Grid.Column="2"
+                        Clicked="btnUser_Clicked"/>
+
+            </Grid>
+            <!-- END OF LOGIN BAR -->
+
+
+            <ActivityIndicator x:Name="activityIndicator" Margin="0,50,0,0" VerticalOptions="Center" HorizontalOptions="Center" Color="Black" WidthRequest="30" HeightRequest="30" Grid.RowSpan="1"/>
+
+            <ListView x:Name="lstGames" Grid.Row="1" HasUnevenRows="True" VerticalOptions="FillAndExpand" SeparatorColor="Black" SelectionMode="Single" ItemTapped="lstGames_ItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Vertical" Margin="10">
+                                    <Label Text="{Binding Name}"/>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Release Date: "/>
+                                                <Span Text="{Binding ReleaseDate}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                                <Image Grid.Column="1" Aspect="AspectFill" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="50">
+                                    <Image.Source>
+                                        <UriImageSource Uri="{Binding Image}" CacheValidity="3" CachingEnabled="True"/>
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -14,5 +14,6 @@ namespace GameCatalogueApp.Classes._Custom_API.Data
         public double? Rating { get; set; } // Can be null as some games dont have ratings (NOT AGE RATING)
         public string[] Platform { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public string Image { get; set; }
     }
 }

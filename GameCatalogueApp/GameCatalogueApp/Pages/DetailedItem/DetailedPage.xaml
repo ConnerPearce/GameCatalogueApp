@@ -93,8 +93,8 @@
             </ScrollView>
             
             <StackLayout Orientation="Horizontal" Grid.Row="5" Spacing="0">
-                <Button x:Name="btnCompleted" Text="Add To Completed" VerticalOptions="Fill" HorizontalOptions="FillAndExpand"/>
-                <Button x:Name="btnWishlist" Text="Add to Wishlist" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                <Button x:Name="btnCompleted" Text="Add To Completed" Clicked="btnCompleted_Clicked" VerticalOptions="Fill" HorizontalOptions="FillAndExpand"/>
+                <Button x:Name="btnWishlist" Text="Add to Wishlist" Clicked="btnWishlist_Clicked" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
 

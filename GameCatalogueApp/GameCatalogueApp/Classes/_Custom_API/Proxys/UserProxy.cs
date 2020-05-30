@@ -20,7 +20,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
         }
 
         // Checks the status codes for the HttpResponse and returns true or false and a error message if needed
-        private bool CheckStatusCodes(HttpResponseMessage response, ErrorMessage errorMessage)
+        private async Task<bool> CheckStatusCodes(HttpResponseMessage response, ErrorMessage errorMessage)
         {
             // This handles all status errors
             if (response.IsSuccessStatusCode)
@@ -31,7 +31,10 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
             }
             else // Any unprepared status code
             {
-                errorMessage($"Something went wrong! \nStatus Code: {response.StatusCode} \nError Message{response.ReasonPhrase}");
+                errorMessage($"\nStatus Code: {response.StatusCode} \nError Message: {response.ReasonPhrase}");
+
+                // Below is how i tested getting advanced error info to give to Sam
+                errorMessage($"Advanced Info: {await response.Content.ReadAsStringAsync()}");
             }
             return false;
         }
@@ -48,9 +51,9 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
 
                 var url = $"user/user={uName}&pwrd={password}";
                 HttpResponseMessage response = http.GetAsync(url).Result;
-                if (CheckStatusCodes(response, errorMessage))
+                if (await CheckStatusCodes(response, errorMessage))
                 {
-                    var user = response.Content.ReadAsAsync<IUser>();
+                    var user = response.Content.ReadAsAsync<User>();
                     return await user;
                 }
                 else
@@ -67,38 +70,43 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
         }
 
         // Used to create a new user, used in registration
-        public async Task PostUser(ErrorMessage errorMessage, User user)
+        public async Task<bool> PostUser(ErrorMessage errorMessage, User user)
         {
             try
             {
                 var http = new HttpClient();
 
                 var response = await http.PostAsJsonAsync($"{_baseAddress}/User", user);
-                if (CheckStatusCodes(response, errorMessage))
-                    return;
+                if (await CheckStatusCodes(response, errorMessage))
+                    return true;
+                else
+                    return false;
+
             }            
             catch (Exception ex)
             {
                 errorMessage(ex.Message);
-                return;
+                return false;
             }
         }
 
         // Updates user info, used in settings page
-        public async Task PutUser(ErrorMessage errorMessage, User user)
+        public async Task<bool> PutUser(ErrorMessage errorMessage, User user)
         {
             try
             {
                 var http = new HttpClient();
 
                 var response = await http.PutAsJsonAsync($"{_baseAddress}/User", user);
-                if (CheckStatusCodes(response, errorMessage))
-                    return;
+                if (await CheckStatusCodes(response, errorMessage))
+                    return true;
+                else
+                    return false;
             }
             catch (Exception ex)
             {
                 errorMessage(ex.Message);
-                return;
+                return false;
             }
         }
     }

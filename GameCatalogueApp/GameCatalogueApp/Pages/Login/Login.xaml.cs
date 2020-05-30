@@ -50,7 +50,7 @@ namespace GameCatalogueApp.Pages.Login
                     {
                         HomePage.isLoggedIn = true;
                         HomePage.user = user;
-                        await DisplayAlert("User Info Retrieved!", $"Hello {user.FName} {user.LName}", "Hello");
+                        await Navigation.PushAsync(new HomePage());
                     }
                     else
                     {

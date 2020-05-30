@@ -55,5 +55,14 @@ namespace GameCatalogueApp.Pages.DetailedItem
             }
         }
 
+        private void btnCompleted_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnWishlist_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }

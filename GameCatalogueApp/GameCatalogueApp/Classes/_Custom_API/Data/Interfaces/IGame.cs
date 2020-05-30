@@ -12,5 +12,6 @@ namespace GameCatalogueApp.Classes._Custom_API.Data
         double? Rating { get; set; }
         DateTime ReleaseDate { get; set; }
         string Summary { get; set; }
+        string Image { get; set; }
     }
 }

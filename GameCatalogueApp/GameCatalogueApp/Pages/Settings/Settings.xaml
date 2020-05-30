@@ -7,34 +7,43 @@
              x:Class="GameCatalogueApp.Pages.Settings.Settings"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <Grid RowSpacing="10">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Text="Settings" FontSize="Large" HorizontalOptions="Center"/>
-            <TableView x:Name="tblAccountSettings" Intent="Menu" Grid.Row="1" IsVisible="True">
+            <Label Text="Settings" FontSize="Large" HorizontalOptions="Center" Margin="10"/>
+            <TableView x:Name="tblAccountSettings" Intent="Settings" Grid.Row="1" IsVisible="True">
                 <TableRoot>
-                    <TableSection Title="Account Settings">
-                        <EntryCell x:Name="txtUname" Label="Username" Placeholder="Jack101..."/>
-                        <EntryCell x:Name="txtFName" Label="First Name" Placeholder="Jack..."/>
-                        <EntryCell x:Name="txtLName" Label="Last Name" Placeholder="Kline..."/>
-                        <EntryCell x:Name="txtEmail" Label="Email" Placeholder="JackDeNephalim@godmail.com"/>
-                        <EntryCell x:Name="txtPwrd" Label="Password" Placeholder="*****"/>
+                    <TableSection x:Name="tblsAccount" Title="Account Settings">
+                        <EntryCell x:Name="txtUname" Label="Username" Text="{Binding UName}" Placeholder="Jack101..."/>
+                        <EntryCell x:Name="txtFName" Label="First Name" Text="{Binding FName}" Placeholder="Jack..."/>
+                        <EntryCell x:Name="txtLName" Label="Last Name" Text="{Binding LName}" Placeholder="Kline..."/>
+                        <EntryCell x:Name="txtEmail" Label="Email" Text="{Binding Email}" Placeholder="JackDeNephalim@godmail.com"/>
+                        <EntryCell x:Name="txtPwrd" Label="Password" Text="{Binding Pwrd}" Placeholder="*****"/>
+                        <ViewCell>
+                            <Button x:Name="btnSubmitChanges" Text="Change Info" HorizontalOptions="Center" Clicked="btnSubmitChanges_Clicked"/>
+                        </ViewCell>
                     </TableSection>
-                </TableRoot>
-            </TableView>
-
-            <TableView Intent="Settings" Grid.Row="2">
-                <TableRoot>
+                    
+                    
                     <TableSection Title="Additional Settings">
                         <SwitchCell Text="Remember Me"/>
                         <SwitchCell Text="Use Multiple Search Sources" On="True"/>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="btnWishlist" Text="Wishlist" Clicked="btnWishlist_Clicked"/>
+                                <Button x:Name="btnCompleted" Text="Completed" Clicked="btnCompleted_Clicked" Grid.Column="2"/>
+                            </Grid>
+                        </ViewCell>
                     </TableSection>
                 </TableRoot>
             </TableView>
-
         </Grid>
     </ContentPage.Content>
 </ContentPage>

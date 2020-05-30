@@ -8,6 +8,9 @@ using GameCatalogueApp.Classes.API.Data;
 using GameCatalogueApp.Classes.ConnectionManager;
 using GameCatalogueApp.Classes.Pages.DetailedPage;
 using GameCatalogueApp.Classes.Pages.LoginPage;
+using GameCatalogueApp.Classes.Pages.RegistrationPage;
+using GameCatalogueApp.Classes.Pages.SettingsPage;
+using GameCatalogueApp.Pages.Settings;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -46,6 +49,8 @@ namespace GameCatalogueApp
             builder.RegisterType<SearchBackend>().As<ISearchBackend>();
             builder.RegisterType<DetailedPageBackend>().As<IDetailedPageBackend>();
             builder.RegisterType<LoginBackend>().As<ILoginBackend>();
+            builder.RegisterType<RegistrationBackend>().As<IRegistrationBackend>();
+            builder.RegisterType<SettingsBackend>().As<ISettingsBackend>();
 
             // API Classes //
             string baseAddress = "https://api.rawg.io/api/";
@@ -54,7 +59,7 @@ namespace GameCatalogueApp
                 return new GameProxy(baseAddress);
             }).As<IGameProxy>();
 
-            string customAPIbaseAddress = "http://localhost:5000/";
+            string customAPIbaseAddress = "https://gamecatalog.api.labnet.nz/";
             builder.Register<UserProxy>((c, p) =>
             {
                 return new UserProxy(customAPIbaseAddress);
