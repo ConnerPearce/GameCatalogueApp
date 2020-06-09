@@ -6,12 +6,12 @@ namespace GameCatalogueApp.Classes._Custom_API.Data
     {
         string Developer { get; set; }
         string Genre { get; set; }
-        string Id { get; set; }
-        string Name { get; set; }
+        string id { get; set; }
+        string name { get; set; }
         string[] Platform { get; set; }
         double? Rating { get; set; }
-        DateTime ReleaseDate { get; set; }
+        DateTime released { get; set; }
         string Summary { get; set; }
-        string Image { get; set; }
+        string background_image { get; set; }
     }
 }

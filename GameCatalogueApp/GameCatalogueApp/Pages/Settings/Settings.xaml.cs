@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using GameCatalogueApp.Classes._Custom_API.Data;
 using GameCatalogueApp.Classes.Pages.SettingsPage;
+using GameCatalogueApp.Classes.StorageManager;
 using GameCatalogueApp.Pages.Home;
 using System;
 using System.Collections.Generic;
@@ -16,47 +17,73 @@ namespace GameCatalogueApp.Pages.Settings
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Settings : ContentPage
     {
-        private IUser user { get; set; }
-        private IContainer container;
+        public delegate void WishlistFunction(object sender, EventArgs e);
+        public delegate void CompletedFunction(object sender, EventArgs e);
 
-        public Settings()
+
+        private IContainer container;
+        private HomePage.ErrorHandling _displayError;
+        private WishlistFunction _wishlistFunction;
+        private CompletedFunction _completedFunction;
+
+        public Settings(HomePage.ErrorHandling displayError, WishlistFunction wishlistFunction, CompletedFunction completedFunction)
         {
+            _displayError = displayError;
+            _wishlistFunction = wishlistFunction;
+            _completedFunction = completedFunction;
+
             InitializeComponent();
-            PopulateTables();
         }
-        private void PopulateTables()
+
+        protected override async void OnAppearing()
         {
-            if (HomePage.isLoggedIn)
+            // Sets the switch to be on if rememberDetails.txt returns "true" in text, if its anything else it will set it to off
+            // By Having it in this method it will check each tim the page is loaded in case its changed, rather than checking it once when the program loads and not changing it 
+            scRemeber.On = (await Storage.ReadTextFileAsync("rememberDetails.txt", _displayError) == "true") ? true : false;
+            scMutliSearch.On = App.useCustomAPI;
+            if (App.isLoggedIn)
             {
                 tblAccountSettings.IsVisible = true;
-                user = HomePage.user;
-                tblsAccount.BindingContext = user;
+                tblsAccount.BindingContext = App.user;
             }
             else
                 tblAccountSettings.IsVisible = false;
+            btnCompleted.Clicked += new EventHandler(_completedFunction);
+            btnWishlist.Clicked += new EventHandler(_wishlistFunction);
+
         }
-        private async void DisplayError(string error) => await DisplayAlert("Something went wrong", $"Error info: {error}", "Ok");
 
+        protected override void OnDisappearing()
+        {
+            btnCompleted.Clicked -= new EventHandler(_completedFunction);
+            btnWishlist.Clicked -= new EventHandler(_wishlistFunction);
+            if(container != null)
+                container.Dispose();
+        }
 
-        private async void btnWishlist_Clicked(object sender, EventArgs e) => await Navigation.PushAsync(new Wishlist.Wishlist());
-
-        private async void btnCompleted_Clicked(object sender, EventArgs e) => await Navigation.PushAsync(new Played.Played());
-
+        // Used to update User Info
         private void btnSubmitChanges_Clicked(object sender, EventArgs e) => ChangeUserInfo();
 
+        // Used to logout
+        private void btnLogout_Clicked(object sender, EventArgs e) => Logout();
+
+        // Used to remember user login details
+        private void scRemeber_OnChanged(object sender, ToggledEventArgs e) => RememberMe();
+
+        // Linked to the submitChanges button
         private async void ChangeUserInfo()
         {
             if (string.IsNullOrEmpty(txtUname.Text))
-                DisplayError("Please enter a username");
+                _displayError("Please enter a username");
 
             else if (string.IsNullOrEmpty(txtFName.Text))
-                DisplayError("Please enter your first name");
+                _displayError("Please enter your first name");
             else if (string.IsNullOrEmpty(txtLName.Text))
-                DisplayError("Please enter your last name");
+                _displayError("Please enter your last name");
             else if (string.IsNullOrEmpty(txtEmail.Text))
-                DisplayError("Please enter your email");
+                _displayError("Please enter your email");
             else if (string.IsNullOrEmpty(txtPwrd.Text))
-                DisplayError("Please enter a password");
+                _displayError("Please enter a password");
             else
             {
                 await DisplayAlert("Progress", "Updating Account Now", "Ok");
@@ -66,17 +93,73 @@ namespace GameCatalogueApp.Pages.Settings
                     var app = scope.Resolve<ISettingsBackend>();
                     var success = await app.UpdateUser(new User
                     {
-                        Id = user.Id,
+                        Id = App.user.Id,
                         UName = txtUname.Text,
                         Email = txtEmail.Text,
                         FName = txtFName.Text,
                         LName = txtLName.Text,
                         Pwrd = txtPwrd.Text
-                    }, DisplayError);
+                    }, _displayError);
                     if (success)
                         await DisplayAlert("Updated!", "Your details have been updated!", "Ok");
                 }
             }
         }
+
+        // Linked to the Logout button
+        private async void Logout()
+        {
+            bool accept = await DisplayAlert("Are you sure", "Do you want to logout?", "Yes", "No");
+            if (accept)
+            {
+                await Storage.WriteTextFileAsync("username.txt", "", _displayError);
+                await Storage.WriteTextFileAsync("password.txt", "", _displayError);
+
+                App.user = new User();
+                App.isLoggedIn = false;
+                App.txtUsername = string.Empty;
+                App.txtPwrd = string.Empty;
+
+                await Navigation.PushAsync(new MainPage());
+            }
+        }
+
+        // Linked to the Remember Details Switch
+        private async void RememberMe()
+        {
+            bool remember = scRemeber.On;
+            if (remember)
+            {
+                // Remembering details then saves the username and password
+                await Storage.WriteTextFileAsync("rememberDetails.txt", "true", _displayError);
+                await Storage.WriteTextFileAsync("username.txt", App.user.UName, _displayError);
+                await Storage.WriteTextFileAsync("password.txt", App.user.Pwrd, _displayError);
+            }
+            else
+            {
+                // Turning remember off then removes the details
+                await Storage.WriteTextFileAsync("rememberDetails.txt", "false", _displayError);
+                await Storage.WriteTextFileAsync("username.txt", "", _displayError);
+                await Storage.WriteTextFileAsync("password.txt", "", _displayError);
+            }
+        }
+
+        private async void scMutliSearch_OnChanged(object sender, ToggledEventArgs e)
+        {
+            var multi = scMutliSearch.On;
+            if (multi)
+            {
+                await Storage.WriteTextFileAsync("custom.txt", "true", _displayError);
+                App.useCustomAPI = true;
+            }
+            else
+            {
+                await Storage.WriteTextFileAsync("custom.txt", "false", _displayError);
+                App.useCustomAPI = false;
+
+            }
+        }
+
+
     }
 }

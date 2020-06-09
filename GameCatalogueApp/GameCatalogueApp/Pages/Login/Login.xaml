@@ -30,7 +30,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackLayout Orientation="Vertical">
-                    <CheckBox x:Name="chkRemember" IsChecked="True" CheckedChanged="chkRemember_CheckedChanged"/>
+                    <CheckBox x:Name="chkRemember"/>
                     <Label Text="Remember me"/>
                 </StackLayout>
                 <Button x:Name="btnRegistration" Text="Register" Clicked="btnRegistration_Clicked" Grid.Column="2"/>

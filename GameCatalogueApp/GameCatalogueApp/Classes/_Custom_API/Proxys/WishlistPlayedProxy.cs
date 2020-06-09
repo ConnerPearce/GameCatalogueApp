@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameCatalogueApp.Pages.Home;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -10,8 +11,6 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
     {
         private readonly string _baseAddress;
 
-        public delegate void ErrorMessage(string message);
-
         public WishlistPlayedProxy(string baseAddress)
         {
             _baseAddress = baseAddress;
@@ -21,7 +20,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
         // As the API controllers are both the same this class can be generic to cut down the amount of API Proxys in the project
 
         // Checks the status codes for the HttpResponse and returns true or false and a error message if needed
-        private bool CheckStatusCodes(HttpResponseMessage response, ErrorMessage errorMessage)
+        private bool CheckStatusCodes(HttpResponseMessage response, HomePage.ErrorHandling errorMessage)
         {
             // This handles all status errors
             if (response.IsSuccessStatusCode)
@@ -41,8 +40,8 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
             return false;
         }
 
-        // Gets an item associated with the user ID
-        public async Task<List<T>> GetItems<T>(ErrorMessage errorMessage, string itemChoice, string id)
+        // Gets an item associated with the user ID, Returns a List<T> which can either be a List<Wishlist> or a List<Played>
+        public async Task<List<T>> GetItems<T>(HomePage.ErrorHandling errorMessage, string itemChoice, string id)
         {
             try
             {
@@ -54,7 +53,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                         BaseAddress = new Uri(_baseAddress)
                     };
 
-                    var url = $"{itemChoice}/id={id}";
+                    var url = $"{itemChoice}/{id}";
                     HttpResponseMessage response = http.GetAsync(url).Result;
                     if (CheckStatusCodes(response, errorMessage))
                     {
@@ -66,7 +65,6 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                 }
                 else
                 {
-                    errorMessage($"Unable to retrieve: {itemChoice}");
                     return null;
                 }
             }
@@ -77,33 +75,71 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
             }
         }
 
-        public async Task PostItem<T>(ErrorMessage errorMessage, T item, string itemChoice)
+        // Same as GetItems minus the ErrorMessage, if theres no items found then thats because its not on the wishlist/played
+        // This is fine as its only a check to switch buttons around
+        // No need to display a popup when displaying detailed game info
+        public async Task<List<T>> IsOnT<T>(string itemChoice, string id)
         {
             try
             {
-                if (itemChoice.ToLower() == "played" || itemChoice.ToLower() == "wishlist")
+                if (itemChoice.ToLower() == "wishlist" || itemChoice.ToLower() == "played")
+                {
+
+                    var http = new HttpClient
+                    {
+                        BaseAddress = new Uri(_baseAddress)
+                    };
+
+                    var url = $"{itemChoice}/{id}";
+                    HttpResponseMessage response = http.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var items = await response.Content.ReadAsAsync<List<T>>();
+                        return items;
+                    }
+                    else
+                        return null;
+                }
+                else
+                    return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        // Used to post an item to Wishlist or Played Tables, Returns a bool based on success
+        public async Task<bool> PostItem<T>(HomePage.ErrorHandling errorMessage, T item, string itemChoice)
+        {
+            try
+            {
+                if (itemChoice == "Played" || itemChoice == "Wishlist")
                 {
                     var http = new HttpClient();
 
-                    HttpResponseMessage response = await http.PostAsJsonAsync($"{_baseAddress}/{itemChoice}", item);
+                    HttpResponseMessage response = await http.PostAsJsonAsync($"{_baseAddress}{itemChoice}", item);
                     if (CheckStatusCodes(response, errorMessage))
-                        return;
+                        return true;
+                    else
+                        return false;
                 }
                 else
                 {
                     errorMessage($"Unable to Add to {itemChoice}");
-                    return;
+                    return false;
                 }
 
             }
             catch (Exception ex)
             {
                 errorMessage(ex.Message);
-                return;
+                return false;
             }
         }
 
-        public async Task DeleteItem(ErrorMessage errorMessage, string itemChoice, string id)
+        // Used to delete an item from Wishlist or Played Tables, Returns a bool based on success
+        public async Task<bool> DeleteItem(HomePage.ErrorHandling errorMessage, string itemChoice, string id)
         {
             try
             {
@@ -111,21 +147,23 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                 {
                     var http = new HttpClient();
 
-                    HttpResponseMessage response = await http.DeleteAsync($"{_baseAddress}/{id}");
+                    HttpResponseMessage response = await http.DeleteAsync($"{_baseAddress}{itemChoice}/{id}");
                     if (CheckStatusCodes(response, errorMessage))
-                        return;
+                        return true;
+                    else
+                        return false;
                 }
                 else
                 {
                     errorMessage($"Unable to delete from {itemChoice}");
-                    return;
+                    return false;
                 }
 
             }
             catch (Exception ex)
             {
                 errorMessage(ex.Message);
-                return;
+                return false;
             }
         }
 

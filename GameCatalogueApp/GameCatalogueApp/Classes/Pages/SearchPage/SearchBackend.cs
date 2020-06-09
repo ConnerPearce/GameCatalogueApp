@@ -1,6 +1,9 @@
 ﻿using GameCatalogueApp.API;
 using GameCatalogueApp.API.Data;
+using GameCatalogueApp.Classes._Custom_API.Data;
+using GameCatalogueApp.Classes._Custom_API.Proxys;
 using GameCatalogueApp.Classes.ConnectionManager;
+using GameCatalogueApp.Pages.Home;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,56 +16,66 @@ namespace GameCatalogueApp.Classes
         // Dependancy Injection Variables
         private readonly ICheckConnection _checkConnection;
         private readonly IGameProxy _gameProxy;
+        private readonly ICustomGameProxy _customGameProxy;
 
-        // Class Specific Variables
-        private string errorInfo;
-
-        // Delegate for errors
-        public delegate void ErrorMessage(string message);
-        public SearchBackend(ICheckConnection checkConnection, IGameProxy gameProxy)
+        public SearchBackend(ICheckConnection checkConnection, IGameProxy gameProxy, ICustomGameProxy customGameProxy)
         {
             _checkConnection = checkConnection;
             _gameProxy = gameProxy;
+            _customGameProxy = customGameProxy;
         }
 
-        public async Task<IGameRootObject> GetGames(string search, ErrorMessage errorMessage)
+        public async Task<IGameRootObject> GetGames(string search, HomePage.ErrorHandling errorMessage)
         {
 
-                bool connection = _checkConnection.hasConnection((error) => errorInfo = error);
-                if (connection)
+            bool connection = _checkConnection.hasConnection(errorMessage);
+            if (connection)
+            {
+                if (!string.IsNullOrEmpty(search))
                 {
-                    if (!string.IsNullOrEmpty(search))
-                    {
-                        IGameRootObject games = await _gameProxy.GetGameBySearch(search, (error) => errorInfo = error);
-                        if (games != null)
-                        {
-                            return games;
-                        }
-                        else
-                        {
-                            errorMessage(errorInfo);
-                            return null;
-                        }
-                    }
+                    var games = await _gameProxy.GetGameBySearch(search, errorMessage);
+                    if (games == null)
+                        return null;
                     else
-                    {
-                        IGameRootObject games = await _gameProxy.GetAllGameInfo((error) => errorInfo = error);
-                        if (games != null)
-                        {
-                            return games;
-                        }
-                        else
-                        {
-                            errorMessage(errorInfo);
-                            return null;
-                        }
-                    }
+                        return games;
                 }
                 else
                 {
-                    errorMessage(errorInfo);
-                    return null;
+                    var games = await _gameProxy.GetAllGameInfo(errorMessage);
+                    if (games == null)
+                        return null;
+                    else
+                        return games;
                 }
+            }
+            else
+                return null;
+        }
+
+        public async Task<List<Game>> GetCustomGames(string search, HomePage.ErrorHandling errorMessage)
+        {
+            bool connection = _checkConnection.hasConnection(errorMessage);
+            if (connection)
+            {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var games = await _customGameProxy.GetGamesBySearch(errorMessage, search);
+                    if (games == null)
+                        return null;
+                    else
+                        return games;
+                }
+                else
+                {
+                    var games = await _customGameProxy.GetAllGames(errorMessage);
+                    if (games == null)
+                        return null;
+                    else
+                        return games;
+                }
+            }
+            else
+                return null;
         }
     }
 }

@@ -24,8 +24,29 @@ namespace GameCatalogueApp.API
             _baseAddress = baseAddress;
         }
 
+        // Checks the status codes for the HttpResponse and returns true or false and a error message if needed
+        private bool CheckStatusCodes(HttpResponseMessage response, HomePage.ErrorHandling errorMessage)
+        {
+            // This handles all status errors
+            if (response.IsSuccessStatusCode)
+                return true;
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest) // If the API data is somehow null
+            {
+                errorMessage($"Oops, Try again later, something went wrong: {response.ReasonPhrase}");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound) // If the amount of items retrieved is 0 (No games were found in the database)
+            {
+                errorMessage("No Games were found, Try again later");
+            }
+            else // Any unprepared status code
+            {
+                errorMessage($"Something went wrong! \nStatus Code: {response.StatusCode} \nError Message{response.ReasonPhrase}");
+            }
+            return false;
+        }
+
         // GET ALL GAMES
-        public async Task<IGameRootObject> GetAllGameInfo(ErrorMessage errorMessage)
+        public async Task<IGameRootObject> GetAllGameInfo(HomePage.ErrorHandling errorMessage)
         {
             try
             {
@@ -40,7 +61,7 @@ namespace GameCatalogueApp.API
 
                 var url = "games";
                 HttpResponseMessage response = http.GetAsync(url).Result;
-                if (response.IsSuccessStatusCode)
+                if (CheckStatusCodes(response, errorMessage))
                 {
 
                     //If theres a succesful response return the content
@@ -48,13 +69,7 @@ namespace GameCatalogueApp.API
                     return await games;
                 }
                 else
-                {
-
-                    // This is for if there is an error
-                    // The delegate will return what the error is to the main xaml and then the xaml will display a pop up detailing the error
-                    errorMessage(response.ReasonPhrase);
                     return null;
-                }
             }
             catch (Exception ex)
             {
@@ -67,7 +82,7 @@ namespace GameCatalogueApp.API
 
         // GAME SEARCH PROXY
         // Gets games by a search
-        public async Task<IGameRootObject> GetGameBySearch(string search, ErrorMessage errorMessage)
+        public async Task<IGameRootObject> GetGameBySearch(string search, HomePage.ErrorHandling errorMessage)
         {
             try
             {
@@ -82,7 +97,7 @@ namespace GameCatalogueApp.API
 
                 var url = $"games?search={search}";
                 HttpResponseMessage response = http.GetAsync(url).Result;
-                if (response.IsSuccessStatusCode)
+                if (CheckStatusCodes(response, errorMessage))
                 {
 
                     //If theres a succesful response return the content
@@ -90,13 +105,7 @@ namespace GameCatalogueApp.API
                     return await games;
                 }
                 else
-                {
-
-                    // This is for if there is an error
-                    // The delegate will return what the error is to the main xaml and then the xaml will display a pop up detailing the error
-                    errorMessage(response.ReasonPhrase);
                     return null;
-                }
             }
             catch (Exception ex)
             {
@@ -108,7 +117,7 @@ namespace GameCatalogueApp.API
 
         // Single Game
         // Gets a single game's information based on unique identifier called a slug
-        public async Task<ISingleGameRootObject> GetSinlgeGameInfo(string slug, ErrorMessage errorMessage)
+        public async Task<ISingleGameRootObject> GetSinlgeGameInfo(string slug, HomePage.ErrorHandling errorMessage)
         {
             try
             {
@@ -124,21 +133,14 @@ namespace GameCatalogueApp.API
 
                 var url = $"games/{slug}";
                 HttpResponseMessage response = http.GetAsync(url).Result;
-                if (response.IsSuccessStatusCode)
+                if (CheckStatusCodes(response, errorMessage))
                 {
-
                     //If theres a succesful response return the content
                     var game = response.Content.ReadAsAsync<SingleGameRootObject>();
                     return await game;
                 }
                 else
-                {
-
-                    // This is for if there is an error
-                    // The delegate will return what the error is to the main xaml and then the xaml will display a pop up detailing the error
-                    errorMessage(response.ReasonPhrase);
                     return null;
-                }
             }
             catch (Exception ex)
             {

@@ -11,18 +11,17 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace GameCatalogueApp.Pages.Played
+namespace GameCatalogueApp.Pages.Wishlist
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Played : ContentPage
+    public partial class WishlistPage : ContentPage
     {
         IContainer container;
         private HomePage.UserFunction _userFunction;
         private HomePage.ErrorHandling _errorHandling;
         private HomePage.GameList _gameList;
 
-
-        public Played(HomePage.UserFunction userFunction, HomePage.ErrorHandling errorHandling, HomePage.GameList gameList)
+        public WishlistPage(HomePage.UserFunction userFunction, HomePage.ErrorHandling errorHandling, HomePage.GameList gameList)
         {
             _userFunction = userFunction;
             _errorHandling = errorHandling;
@@ -39,26 +38,26 @@ namespace GameCatalogueApp.Pages.Played
             PopulateInfo();
         }
 
+
         protected override void OnDisappearing()
         {
-            if (container != null)
-                container.Dispose();
-
             btnUser.Clicked -= new EventHandler(_userFunction);
             lstGames.ItemSelected -= new EventHandler<SelectedItemChangedEventArgs>(_gameList);
             lstGames.ItemsSource = null;
+            
+            if(container != null)
+                container.Dispose();
         }
 
-        // Gets the information from the Played table in the database
         private async void PopulateInfo()
         {
             container = DependancyInjection.Configure();
             using (var scope = container.BeginLifetimeScope())
             {
                 var app = scope.Resolve<IWishlistPlayedBackend>();
-                if (App.isLoggedIn)
+                if (App.isLoggedIn) // If the user isnt logged in there wouldnt be anything to display
                 {
-                    var items = await app.GetPlayed(_errorHandling, App.user.Id);
+                    var items = await app.GetWishlist(_errorHandling, App.user.Id);
                     if (items != null)
                         lstGames.ItemsSource = items;
                 }
@@ -66,6 +65,6 @@ namespace GameCatalogueApp.Pages.Played
                     _errorHandling("Please log in to view this");
             }
         }
-      
+   
     }
 }

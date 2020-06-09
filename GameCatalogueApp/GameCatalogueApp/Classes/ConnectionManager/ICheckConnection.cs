@@ -1,7 +1,9 @@
-﻿namespace GameCatalogueApp.Classes.ConnectionManager
+﻿using GameCatalogueApp.Pages.Home;
+
+namespace GameCatalogueApp.Classes.ConnectionManager
 {
     public interface ICheckConnection
     {
-        bool hasConnection(CheckConnection.ConnectionAlert connectionAlert);
+        bool hasConnection(HomePage.ErrorHandling connectionAlert);
     }
 }

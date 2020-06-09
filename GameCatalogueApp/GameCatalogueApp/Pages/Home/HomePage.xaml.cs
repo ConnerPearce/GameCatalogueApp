@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using GameCatalogueApp.Classes._Custom_API.Data;
+using GameCatalogueApp.Classes.StorageManager;
 using GameCatalogueApp.Pages.Settings;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
 namespace GameCatalogueApp.Pages.Home
@@ -16,43 +18,62 @@ namespace GameCatalogueApp.Pages.Home
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage
     {
-        public static bool isLoggedIn = false;
-        public static IUser user = new User();
+        // These are to pass through my EventHandlers
+        public delegate void LoginFunction(object sender, EventArgs e);
+        public delegate void UserFunction(object sender, EventArgs e);
+        public delegate void GameList(object sender, SelectedItemChangedEventArgs e);
+        
+        // For my Error Messages
+        public delegate void ErrorHandling(string error);
 
+        // For Search functionality
+        public delegate void Search(string message);
 
-        public HomePage()
+        // Creating local instances of the delegates to use in this page
+        private LoginFunction _loginFunction;
+        private UserFunction _userFunction;
+        private ErrorHandling _errorHandling;
+        private Search _search;
+        private GameList _gameList;
+
+        // This is the home Page and will be loaded first
+        public HomePage(LoginFunction loginFunction, UserFunction userFunction, Search search, ErrorHandling errorHandling, GameList gameList)
         {
+            _loginFunction = loginFunction;
+            _userFunction = userFunction;
+            _errorHandling = errorHandling;
+            _gameList = gameList;
+            _search = search;
+
+
             InitializeComponent();
-            if (!isLoggedIn)
-            {
-                btnUser.IsVisible = false;
-                btnLogin.IsVisible = true;
-            }
-            else
-            {
-                btnLogin.IsVisible = false;
-                btnUser.Text = user.UName;
-                btnUser.IsVisible = true;
-            }
         }
 
-        //LOGIN BUTTON
-        private async void btnLogin_Clicked(object sender, EventArgs e) => await Navigation.PushAsync(new Login.Login());
-        //USER SETTINGS BUTTON
-        private async void btnUser_Clicked(object sender, EventArgs e) => await Navigation.PushAsync(new Settings.Settings());
-
-
-        private async void searchBarGame_SearchButtonPressed(object sender, EventArgs e)
+        // When the app navigates to this page then it'll run this
+        protected override void OnAppearing()
         {
-            string message = searchBarGame.Text;
-            if (!string.IsNullOrEmpty(message))
+            // Sets my event handlers for the .clicked function
+            if (App.isLoggedIn)
             {
-                activityIndicator.IsRunning = true;
-                await Navigation.PushAsync(new Search.Search(message));
-                activityIndicator.IsRunning = false;
+                btnLoginUser.Text = App.user.UName;
+                btnLoginUser.Clicked += new EventHandler(_userFunction);
             }
             else
-                await DisplayAlert("Something went wrong", $"Error info: Enter a game to search for", "Ok");
+            {
+                btnLoginUser.Text = "Login";
+                btnLoginUser.Clicked += new EventHandler(_loginFunction);
+            }
         }
+
+        protected override void OnDisappearing()
+        {
+            // Removes the event handlers, allowing them to be reset again
+            if (App.isLoggedIn)
+                btnLoginUser.Clicked -= new EventHandler(_userFunction);
+            else
+                btnLoginUser.Clicked -= new EventHandler(_loginFunction);
+        }
+
+        private void searchBarGame_SearchButtonPressed(object sender, EventArgs e) => _search(searchBarGame.Text);
     }
 }

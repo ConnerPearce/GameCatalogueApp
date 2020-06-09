@@ -1,6 +1,8 @@
 ﻿using GameCatalogueApp.Classes._Custom_API.Data;
 using GameCatalogueApp.Classes._Custom_API.Proxys;
 using GameCatalogueApp.Classes.ConnectionManager;
+using GameCatalogueApp.Pages.Home;
+using GameCatalogueApp.Pages.Settings;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,8 +15,6 @@ namespace GameCatalogueApp.Classes.Pages.SettingsPage
         private readonly IUserProxy _userProxy;
         private readonly ICheckConnection _checkConnection;
 
-        private string errorInfo;
-        public delegate void ErrorMessage(string error);
 
         public SettingsBackend(ICheckConnection checkConnection, IUserProxy userProxy)
         {
@@ -22,26 +22,19 @@ namespace GameCatalogueApp.Classes.Pages.SettingsPage
             _userProxy = userProxy;
         }
 
-        public async Task<bool> UpdateUser(User user, ErrorMessage errorMessage)
+        public async Task<bool> UpdateUser(User user, HomePage.ErrorHandling errorMessage)
         {
-            bool connection = _checkConnection.hasConnection((error) => errorInfo = error);
+            bool connection = _checkConnection.hasConnection(errorMessage);
             if (connection)
             {
-                var updated = await _userProxy.PutUser((error) => errorInfo = error, user);
+                var updated = await _userProxy.PutUser(errorMessage, user);
                 if (updated)
                     return true;
                 else
-                {
-                    errorMessage(errorInfo);
                     return false;
-                }
             }
             else
-            {
-                errorMessage(errorInfo);
                 return true;
-            }
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GameCatalogueApp.Classes._Custom_API.Data;
+using GameCatalogueApp.Pages.Home;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -12,15 +13,13 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
         // USED FOR DEPENDANCY INJECTION
         private readonly string _baseAddress;
 
-        public delegate void ErrorMessage(string message);
-
         public UserProxy(string baseAddress)
         {
             _baseAddress = baseAddress;
         }
 
         // Checks the status codes for the HttpResponse and returns true or false and a error message if needed
-        private async Task<bool> CheckStatusCodes(HttpResponseMessage response, ErrorMessage errorMessage)
+        private async Task<bool> CheckStatusCodes(HttpResponseMessage response, HomePage.ErrorHandling errorMessage)
         {
             // This handles all status errors
             if (response.IsSuccessStatusCode)
@@ -39,8 +38,8 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
             return false;
         }
 
-        // Used to retrieve a single user, for logging in
-        public async Task<IUser> GetUser(ErrorMessage errorMessage, string uName, string password)
+        // Used to retrieve a single user, for logging in, Returns an IUser
+        public async Task<IUser> GetUser(HomePage.ErrorHandling errorMessage, string uName, string password)
         {
             try
             {
@@ -69,14 +68,14 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
             }          
         }
 
-        // Used to create a new user, used in registration
-        public async Task<bool> PostUser(ErrorMessage errorMessage, User user)
+        // Used to create a new user, used in registration, Returns a bool depending on success
+        public async Task<bool> PostUser(HomePage.ErrorHandling errorMessage, User user)
         {
             try
             {
                 var http = new HttpClient();
 
-                var response = await http.PostAsJsonAsync($"{_baseAddress}/User", user);
+                var response = await http.PostAsJsonAsync($"{_baseAddress}User", user);
                 if (await CheckStatusCodes(response, errorMessage))
                     return true;
                 else
@@ -90,14 +89,14 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
             }
         }
 
-        // Updates user info, used in settings page
-        public async Task<bool> PutUser(ErrorMessage errorMessage, User user)
+        // Updates user info, used in settings page, Returns a bool depending on success
+        public async Task<bool> PutUser(HomePage.ErrorHandling errorMessage, User user)
         {
             try
             {
                 var http = new HttpClient();
 
-                var response = await http.PutAsJsonAsync($"{_baseAddress}/User", user);
+                var response = await http.PutAsJsonAsync($"{_baseAddress}User", user);
                 if (await CheckStatusCodes(response, errorMessage))
                     return true;
                 else

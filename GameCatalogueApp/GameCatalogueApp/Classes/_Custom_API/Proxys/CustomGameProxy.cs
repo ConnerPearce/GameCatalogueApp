@@ -1,4 +1,5 @@
 ﻿using GameCatalogueApp.Classes._Custom_API.Data;
+using GameCatalogueApp.Pages.Home;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -20,7 +21,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
         }
 
         // Checks the status codes for the HttpResponse and returns true or false and a error message if needed
-        private bool CheckStatusCodes(HttpResponseMessage response, ErrorMessage errorMessage)
+        private bool CheckStatusCodes(HttpResponseMessage response, HomePage.ErrorHandling errorMessage)
         {
             // This handles all status errors
             if (response.IsSuccessStatusCode)
@@ -41,7 +42,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
         }
 
         // Gets every game from the MongoDB Database
-        public async Task<List<IGame>> GetAllGames(ErrorMessage errorMessage)
+        public async Task<List<Game>> GetAllGames(HomePage.ErrorHandling errorMessage)
         {
             try
             {
@@ -53,7 +54,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                 HttpResponseMessage response = http.GetAsync("Game").Result;
                 if (CheckStatusCodes(response, errorMessage))
                 {
-                    var games = response.Content.ReadAsAsync<List<IGame>>();
+                    var games = response.Content.ReadAsAsync<List<Game>>();
                     return await games;
                 }
                 else
@@ -69,7 +70,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
 
         // Gets Games by search
 
-        public async Task<List<IGame>> GetGamesBySearch(ErrorMessage errorMessage, string search)
+        public async Task<List<Game>> GetGamesBySearch(HomePage.ErrorHandling errorMessage, string search)
         {
             try
             {
@@ -79,10 +80,11 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                 };
 
                 var url = $"Game/search={search}";
-                HttpResponseMessage response = http.GetAsync("Game").Result;
+                HttpResponseMessage response = http.GetAsync(url).Result;
+
                 if (CheckStatusCodes(response, errorMessage))
                 {
-                    var games = response.Content.ReadAsAsync<List<IGame>>();
+                    var games = response.Content.ReadAsAsync<List<Game>>();
                     return await games;
                 }
                 else
@@ -97,7 +99,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
         }
 
         // Gets a single game by its ID
-        public async Task<IGame> GetGameByID(ErrorMessage errorMessage, string id)
+        public async Task<IGame> GetGameByID(HomePage.ErrorHandling errorMessage, string id)
         {
             try
             {
@@ -110,7 +112,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                 HttpResponseMessage response = http.GetAsync(url).Result;
                 if (CheckStatusCodes(response, errorMessage))
                 {
-                    var games = response.Content.ReadAsAsync<IGame>();
+                    var games = response.Content.ReadAsAsync<Game>();
                     return await games;
                 }
                 else

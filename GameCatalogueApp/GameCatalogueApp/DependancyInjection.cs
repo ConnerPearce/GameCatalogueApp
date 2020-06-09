@@ -10,6 +10,9 @@ using GameCatalogueApp.Classes.Pages.DetailedPage;
 using GameCatalogueApp.Classes.Pages.LoginPage;
 using GameCatalogueApp.Classes.Pages.RegistrationPage;
 using GameCatalogueApp.Classes.Pages.SettingsPage;
+using GameCatalogueApp.Classes.Pages.WishlistPlayedPage;
+using GameCatalogueApp.Classes.StorageManager;
+using GameCatalogueApp.Pages.Home;
 using GameCatalogueApp.Pages.Settings;
 using System;
 using System.Collections.Generic;
@@ -26,6 +29,13 @@ namespace GameCatalogueApp
         // This method contains all variable injections
         // It also manages All classes and returns them as their Interface Counterparts where needed
         // It can also instantiate variables at build time
+
+        // These variables are the URL's for my two API's
+        // They are injected during build time to different parts of my app to be used
+        // This way i can keep the URL's in one place for easy access to change
+        private static readonly string customAPIbaseAddress = "https://gamecatalog.api.labnet.nz/";
+        private static readonly string baseAddress = "https://api.rawg.io/api/";
+
         public static IContainer Configure()
         {
             var builder = new ContainerBuilder();
@@ -44,27 +54,35 @@ namespace GameCatalogueApp
 
             // HELPER CLASSES //
             builder.RegisterType<CheckConnection>().As<ICheckConnection>();
-
             // PAGE BACKENDS //
             builder.RegisterType<SearchBackend>().As<ISearchBackend>();
             builder.RegisterType<DetailedPageBackend>().As<IDetailedPageBackend>();
             builder.RegisterType<LoginBackend>().As<ILoginBackend>();
             builder.RegisterType<RegistrationBackend>().As<IRegistrationBackend>();
             builder.RegisterType<SettingsBackend>().As<ISettingsBackend>();
+            builder.RegisterType<WishlistPlayedBackend>().As<IWishlistPlayedBackend>();
 
-            // API Classes //
-            string baseAddress = "https://api.rawg.io/api/";
+            // API CLASSES //
             builder.Register<GameProxy>((c, p) =>
             {
                 return new GameProxy(baseAddress);
             }).As<IGameProxy>();
 
-            string customAPIbaseAddress = "https://gamecatalog.api.labnet.nz/";
+            // CUSTOM API CLASSES //
             builder.Register<UserProxy>((c, p) =>
             {
                 return new UserProxy(customAPIbaseAddress);
             }).As<IUserProxy>();
 
+            builder.Register<CustomGameProxy>((c, p) =>
+            {    
+               return new CustomGameProxy(customAPIbaseAddress);
+            }).As<ICustomGameProxy>();
+
+            builder.Register<WishlistPlayedProxy>((c, p) =>
+            {
+                return new WishlistPlayedProxy(customAPIbaseAddress);
+            }).As<IWishlistPlayedProxy>();
 
             return builder.Build();
         }       

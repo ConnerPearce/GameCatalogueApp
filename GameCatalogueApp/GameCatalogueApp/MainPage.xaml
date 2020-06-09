@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:GameCatalogueApp"
              mc:Ignorable="d"
-             x:Class="GameCatalogueApp.MainPage">
+             x:Class="GameCatalogueApp.MainPage"
+             NavigationPage.HasNavigationBar="False">
 
   
 </ContentPage>

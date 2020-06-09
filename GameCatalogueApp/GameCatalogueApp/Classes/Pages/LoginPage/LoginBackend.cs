@@ -1,6 +1,9 @@
 ﻿using GameCatalogueApp.Classes._Custom_API.Data;
 using GameCatalogueApp.Classes._Custom_API.Proxys;
 using GameCatalogueApp.Classes.ConnectionManager;
+using GameCatalogueApp.Classes.StorageManager;
+using GameCatalogueApp.Pages.Home;
+using GameCatalogueApp.Pages.Login;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,38 +16,33 @@ namespace GameCatalogueApp.Classes.Pages.LoginPage
         private readonly ICheckConnection _checkConnection;
         private readonly IUserProxy _userProxy;
 
-        private string errorInfo;
-
-        public delegate void ErrorMessage(string message);
-
         public LoginBackend(ICheckConnection checkConnection, IUserProxy userProxy)
         {
             _checkConnection = checkConnection;
             _userProxy = userProxy;
         }
 
-        public async Task<IUser> GetUser(string uName, string password, ErrorMessage errorMessage)
+        public async Task<IUser> GetUser(string uName, string password, HomePage.ErrorHandling errorMessage)
         {
-            bool connection = _checkConnection.hasConnection((error) => errorInfo = error);
+            bool connection = _checkConnection.hasConnection(errorMessage);
             if (connection)
             {
-                IUser user = await _userProxy.GetUser((error) => errorInfo = error, uName, password);
+                IUser user = await _userProxy.GetUser(errorMessage, uName, password);
                 if (user != null)
                 {
+                    if (await Storage.ReadTextFileAsync("rememberDetails.txt", errorMessage) == "true")
+                    {
+                        await Storage.WriteTextFileAsync("username.txt", user.UName, errorMessage);
+                        await Storage.WriteTextFileAsync("password.txt", user.Pwrd, errorMessage);
+                    }
+
                     return user;
                 }
                 else
-                {
-                    errorMessage(errorInfo);
                     return null;
-                }
             }
             else
-            {
-                errorMessage(errorInfo);
                 return null;
-            }
         }
-
     }
 }

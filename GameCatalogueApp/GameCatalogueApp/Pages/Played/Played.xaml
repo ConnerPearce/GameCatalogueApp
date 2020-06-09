@@ -4,12 +4,62 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="GameCatalogueApp.Pages.Played.Played">
+             x:Class="GameCatalogueApp.Pages.Played.Played"
+             NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Played Games" FontSize="Large" VerticalOptions="Center" Margin="10"/>
+                <Button x:Name="btnUser" 
+                        Style="{StaticResource NavigationButton}"                        
+                        Grid.Column="2"/>
+
+            </Grid>
+
+
+            <ActivityIndicator x:Name="activityIndicator" Margin="0,50,0,0" VerticalOptions="Center" HorizontalOptions="Center" Color="Black" WidthRequest="30" HeightRequest="30" Grid.RowSpan="1"/>
+
+            <ListView x:Name="lstGames" Grid.Row="1" HasUnevenRows="True" VerticalOptions="FillAndExpand" SeparatorColor="Black" SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Vertical" Margin="10">
+                                    <Label Text="{Binding name}"/>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Release Date: "/>
+                                                <Span Text="{Binding released, StringFormat='{0:MMMM dd, yyyy}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                                <Image Grid.Column="1" Aspect="AspectFill" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="50">
+                                    <Image.Source>
+                                        <UriImageSource Uri="{Binding background_image}" CacheValidity="3" CachingEnabled="True"/>
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
