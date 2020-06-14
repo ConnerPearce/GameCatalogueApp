@@ -76,11 +76,8 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                 var http = new HttpClient();
 
                 var response = await http.PostAsJsonAsync($"{_baseAddress}User", user);
-                if (await CheckStatusCodes(response, errorMessage))
-                    return true;
-                else
-                    return false;
 
+                return await CheckStatusCodes(response, errorMessage) ? true : false;
             }            
             catch (Exception ex)
             {
@@ -97,10 +94,8 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                 var http = new HttpClient();
 
                 var response = await http.PutAsJsonAsync($"{_baseAddress}User", user);
-                if (await CheckStatusCodes(response, errorMessage))
-                    return true;
-                else
-                    return false;
+
+                return await CheckStatusCodes(response, errorMessage) ? true : false;
             }
             catch (Exception ex)
             {

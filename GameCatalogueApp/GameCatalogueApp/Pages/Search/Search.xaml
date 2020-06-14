@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              mc:Ignorable="d"
              x:Class="GameCatalogueApp.Pages.Search.Search"
              NavigationPage.HasNavigationBar="False">
@@ -29,7 +30,7 @@
 
             <ActivityIndicator x:Name="activityIndicator" Margin="0,50,0,0" VerticalOptions="Center" HorizontalOptions="Center" Color="Black" WidthRequest="30" HeightRequest="30" Grid.RowSpan="1"/>
             
-            <ListView x:Name="lstGames" Grid.Row="1" HasUnevenRows="True" VerticalOptions="FillAndExpand" SeparatorColor="Black" SelectionMode="Single" ItemSelected="lstGames_ItemSelected">
+            <ListView x:Name="lstGames" Grid.Row="1" HasUnevenRows="True" VerticalOptions="FillAndExpand" SeparatorColor="Black" SelectionMode="Single" ItemSelected="lstGames_ItemSelected" ItemAppearing="lstGames_ItemAppearing">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -49,11 +50,21 @@
                                         </Label.FormattedText>
                                     </Label>
                                 </StackLayout>
-                                <Image Grid.Column="1" Aspect="AspectFill" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="50">
+                                <ffimageloading:CachedImage 
+                                    Source="{Binding background_image}" 
+                                    Grid.Column="1" Aspect="AspectFill"
+                                    DownsampleToViewSize="True"
+                                    HorizontalOptions="Fill" 
+                                    VerticalOptions="Fill"
+                                    CacheDuration="3"
+                                    HeightRequest=" 50"/>
+
+                                <!--<Image Grid.Column="1" Aspect="AspectFill" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="50">
                                     <Image.Source>
-                                        <UriImageSource Uri="{Binding background_image}" CacheValidity="3" CachingEnabled="True"/>
+                                        <UriImageSource Uri="{Binding background_image}" CacheValidity="3" CachingEnabled="True" />
                                     </Image.Source>
-                                </Image>
+                                </Image>-->
+                                
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

@@ -17,9 +17,10 @@ namespace GameCatalogueApp.Pages.Played
     public partial class Played : ContentPage
     {
         IContainer container;
-        private HomePage.UserFunction _userFunction;
-        private HomePage.ErrorHandling _errorHandling;
-        private HomePage.GameList _gameList;
+
+        private readonly HomePage.UserFunction _userFunction;
+        private readonly HomePage.ErrorHandling _errorHandling;
+        private readonly HomePage.GameList _gameList;
 
 
         public Played(HomePage.UserFunction userFunction, HomePage.ErrorHandling errorHandling, HomePage.GameList gameList)

@@ -26,9 +26,9 @@ namespace GameCatalogueApp.Pages.DetailedItem
         public static string playedID;
 
         // Creating local instances of the delegates to use in this page
-        private HomePage.LoginFunction _loginFunction;
-        private HomePage.UserFunction _userFunction;
-        private HomePage.ErrorHandling _errorHandling;
+        private readonly HomePage.LoginFunction _loginFunction;
+        private readonly HomePage.UserFunction _userFunction;
+        private readonly HomePage.ErrorHandling _errorHandling;
 
         // id is the unique id of the record from the database, in the Rawg API its in the form of a slug, in the custom API its in the form of an ObjectID
         // rawgOrCustom is a bool. Depending on where the item is being stored the app will do something different to retrieve it differently
@@ -129,6 +129,10 @@ namespace GameCatalogueApp.Pages.DetailedItem
                 else // Uses Rawg API
                 {
                     var game = await app.GetGame(id, _errorHandling);
+                    btnCompleted.IsVisible = false;
+                    btnRemoveComp.IsVisible = false;
+                    btnWishlist.IsVisible = false;
+                    btnRemoveWish.IsVisible = false;
                     if (game != null)
                     {
                         lblGameName.Text = game.name;
@@ -211,7 +215,7 @@ namespace GameCatalogueApp.Pages.DetailedItem
                     {
                         choice = "Played";
 
-                        success = await app.DeleteFromWishlistPlayed(_errorHandling, "Played", playedID);
+                        success = await app.DeleteFromWishlistPlayed(_errorHandling, choice, playedID);
                         if (success)
                         {
                             btnCompleted.IsVisible = true;
@@ -222,7 +226,7 @@ namespace GameCatalogueApp.Pages.DetailedItem
                     {
                         choice = "Wishlist";
 
-                        success = await app.DeleteFromWishlistPlayed(_errorHandling, "Wishlist", wishlistID);
+                        success = await app.DeleteFromWishlistPlayed(_errorHandling, choice, wishlistID);
                         if (success)
                         {
                             btnWishlist.IsVisible = true;

@@ -16,8 +16,9 @@ namespace GameCatalogueApp.Pages.Registration
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Registration : ContentPage
     {
-        private HomePage.ErrorHandling _errorHandling;
         private IContainer container;
+
+        private readonly HomePage.ErrorHandling _errorHandling;
 
         public Registration(HomePage.ErrorHandling errorHandling)
         {
@@ -28,9 +29,17 @@ namespace GameCatalogueApp.Pages.Registration
         protected override void OnDisappearing() 
         { 
             if(container != null)
-                container.Dispose(); 
-        }
+                container.Dispose();
 
+            // Resets all the fields upon leaving the page
+            txtUserName.Text = "";
+            txtConfirmedPwrd.Text = "";
+            txtPassword.Text = "";
+            txtEmail.Text = "";
+            txtFName.Text = "";
+            txtLName.Text = "";
+
+        }
 
         private void btnRegister_Clicked(object sender, EventArgs e) => RegisterFunction();
 

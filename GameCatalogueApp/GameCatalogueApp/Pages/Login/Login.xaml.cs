@@ -19,7 +19,8 @@ namespace GameCatalogueApp.Pages.Login
     public partial class Login : ContentPage
     {
         private IContainer container;
-        private HomePage.ErrorHandling _errorHandling;
+
+        private readonly HomePage.ErrorHandling _errorHandling;
 
         public Login(HomePage.ErrorHandling errorHandling)
         {
@@ -29,8 +30,9 @@ namespace GameCatalogueApp.Pages.Login
 
         protected override async void OnAppearing()
         {
-            chkRemember.IsChecked = (await Storage.ReadTextFileAsync("rememberDetails.txt", _errorHandling) == "true") ? true : false;
+            chkRemember.IsChecked = (await Storage.ReadTextFileAsync(App.detailsLocation, _errorHandling) == "true") ? true : false;
         }
+
 
         // When the navigation is moving from this page, Clear up resources used by dependancy injection
         protected override void OnDisappearing()
@@ -55,26 +57,32 @@ namespace GameCatalogueApp.Pages.Login
                 container = DependancyInjection.Configure();
                 using (var scope = container.BeginLifetimeScope())
                 {
-                    if (chkRemember.IsChecked)
-                        await Storage.WriteTextFileAsync("rememberDetails.txt", "true", _errorHandling);
-                    else
-                        await Storage.WriteTextFileAsync("rememberDetails.txt", "false", _errorHandling);
+                    var option = chkRemember.IsChecked ? "true" : "false";
+                    await Storage.WriteTextFileAsync(App.detailsLocation, option, _errorHandling);
 
                     var app = scope.Resolve<ILoginBackend>();
                     var user = await app.GetUser(txtUsername.Text, txtPassword.Text, _errorHandling);
 
-                    if (user != null)
-                    {
-                        App.isLoggedIn = true;
-                        App.user = user;
-
+                    // This is a shorthand version of an if else statement i had in my program, This way is less code and also works faster
+                    // Technically it is the same as the if else statement commented out below but is much faster
+                    var temp = user != null ? (App.isLoggedIn = true, App.user = user) : (App.isLoggedIn = false, App.user = new User());
+                    if (temp.Item1)
                         await Navigation.PushAsync(new MainPage());
-                    }
-                    else
-                    {
-                        App.isLoggedIn = false;
-                        App.user = new User();
-                    }
+
+                    // Below is an expanded version of the code above
+
+                    //if (user != null)
+                    //{
+                    //    App.isLoggedIn = true;
+                    //    App.user = user;
+
+                    //    await Navigation.PushAsync(new MainPage());
+                    //}
+                    //else
+                    //{
+                    //    App.isLoggedIn = false;
+                    //    App.user = new User();
+                    //}
                 }
             }           
         }

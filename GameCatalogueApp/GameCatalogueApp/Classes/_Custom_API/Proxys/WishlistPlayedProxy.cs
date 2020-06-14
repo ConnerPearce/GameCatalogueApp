@@ -119,17 +119,14 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                     var http = new HttpClient();
 
                     HttpResponseMessage response = await http.PostAsJsonAsync($"{_baseAddress}{itemChoice}", item);
-                    if (CheckStatusCodes(response, errorMessage))
-                        return true;
-                    else
-                        return false;
+
+                    return CheckStatusCodes(response, errorMessage) ? true : false;
                 }
                 else
                 {
                     errorMessage($"Unable to Add to {itemChoice}");
                     return false;
                 }
-
             }
             catch (Exception ex)
             {
@@ -148,10 +145,8 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
                     var http = new HttpClient();
 
                     HttpResponseMessage response = await http.DeleteAsync($"{_baseAddress}{itemChoice}/{id}");
-                    if (CheckStatusCodes(response, errorMessage))
-                        return true;
-                    else
-                        return false;
+
+                    return CheckStatusCodes(response, errorMessage) ? true : false;
                 }
                 else
                 {

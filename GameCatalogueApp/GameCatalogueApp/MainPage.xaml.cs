@@ -44,40 +44,60 @@ namespace GameCatalogueApp
         // As soon as this page starts to be loaded it will navigate to my home page, passing all the neccessary stuff as it goes
         protected override async void OnAppearing()        
         {
-            App.txtUsername = await Storage.ReadTextFileAsync("username.txt", DisplayError);
-            App.txtPwrd = await Storage.ReadTextFileAsync("password.txt", DisplayError);
-            App.useCustomAPI = (await Storage.ReadTextFileAsync("custom.txt",DisplayError) == "true") ? true : false;
-
-            if (!string.IsNullOrEmpty(App.txtUsername) && !string.IsNullOrEmpty(App.txtPwrd))
+            if (!activityInd.IsRunning)
             {
-                container = DependancyInjection.Configure();
-                using (var scope = container.BeginLifetimeScope())
+                activityInd.IsRunning = true;
+                // Checks local storage for users information
+                App.txtUsername = await Storage.ReadTextFileAsync(App.uNameLocation, DisplayError);
+                App.txtPwrd = await Storage.ReadTextFileAsync(App.pwrdLocation, DisplayError);
+
+                // Checks if the app wants to use the custom api or RAWG Api
+                // Is stored locally as a string of either true or false
+                // Converts it to a bool for simplicity sake as it cant be saved as anything less than a string
+                App.useCustomAPI = Convert.ToBoolean(await Storage.ReadTextFileAsync(App.customApiLocation, DisplayError));
+
+                // If the username and password are not empty (Details are being remembered) then it will run this to log the user in
+                if (!string.IsNullOrEmpty(App.txtUsername) && !string.IsNullOrEmpty(App.txtPwrd))
                 {
-                    var app = scope.Resolve<ILoginBackend>();
-                    var person = await app.GetUser(App.txtUsername, App.txtPwrd, DisplayError);
-                    if (person != null)
+                    container = DependancyInjection.Configure();
+                    using (var scope = container.BeginLifetimeScope())
                     {
-                        App.isLoggedIn = true;
-                        App.user = person;
+                        var app = scope.Resolve<ILoginBackend>();
+
+                        // If it runs into errors trying to log the user in then it'll display an alert, this is all handled automatically in my app using the DisplayError method which is a delegate
+                        var person = await app.GetUser(App.txtUsername, App.txtPwrd, DisplayError);
+                        if (person != null)
+                        {
+                            App.isLoggedIn = true;
+                            App.user = person;
+                        }
                     }
                 }
-            }
 
-            await Navigation.PushAsync(new HomePage(LoginButton_Click, UserButton_Click, Search, DisplayError, GetGamesFromlist_Selected));
+                // Navigates to another page and passes through click events and some methods like error handling
+                await Navigation.PushAsync(new HomePage(LoginButton_Click, UserButton_Click, Search, DisplayError, GetGamesFromlist_Selected));
+            }            
         }
 
+        // Called when leaving the page (Navigating away from)
+        // Clears up containers and resets the activity Indicator if its still running
         protected override void OnDisappearing() 
         {
             if (container != null)
                 container.Dispose();
+            activityInd.IsRunning = false;
         }
 
 
-        // DISPLAYS ERROR MESSAGES
+        // DISPLAYS ERROR MESSAGES //
+
+        // By passing this method through my program as a delegate i can manage all my errors using a generic handler that will display the error to the user
         private async void DisplayError(string error) => await DisplayAlert("Something went wrong", $"Error info: {error}", "Ok");
 
-        // LOGIN BUTTON
+        // LOGIN BUTTON //
+
         // Navigates to Login Page
+        // Limits button clicks (Wont do anything if its already trying to do something)
         private async void LoginButton_Click(object sender, EventArgs e)
         {
             if (!isLogin)
@@ -88,8 +108,10 @@ namespace GameCatalogueApp
             }
         }
 
-        // USER SETTINGS BUTTON
+        // USER SETTINGS BUTTON //
+
         // Navigates to Settings Page
+        // Limits button clicks (Wont do anything if its already trying to do something)
         private async void UserButton_Click(object sender, EventArgs e) 
         {
             if (!isUser)
@@ -100,8 +122,10 @@ namespace GameCatalogueApp
             }
         }
 
-        // WISHLIST NAVIGATION BUTTON
+        // WISHLIST NAVIGATION BUTTON //
+
         // Navigates to the wishlist
+        // Limits button clicks (Wont do anything if its already trying to do something)
         private async void WishlistButton_Click(object sender, EventArgs e)
         {
             if (!isWishlist)
@@ -112,8 +136,10 @@ namespace GameCatalogueApp
             }
         }
 
-        // COMPLETED NAVIGATION BUTTON
+        // COMPLETED NAVIGATION BUTTON //
+
         // Navigates to the completed games page
+        // Limits button clicks (Wont do anything if its already trying to do something)
         private async void CompletedButton_Click(object sender, EventArgs e) 
         {
             if (!isCompleted)
@@ -125,8 +151,10 @@ namespace GameCatalogueApp
         }
 
 
-        // HANDLES SEARCHING
-        // Takes in a message, verifys it, then sends it to the Search Page
+        // HANDLES SEARCHING // 
+
+        // Takes in a message, verifys it, then sends it to the Search Page, displays an error if the search is empty
+        // (Generally xamarin doesnt allow it to be empty by default but best to check anyway as good practice)
         private async void Search(string message)
         {
             if (!string.IsNullOrEmpty(message))
@@ -138,7 +166,9 @@ namespace GameCatalogueApp
         }
 
         // HANDLES ITEM SELECTION
+
         // Grabs item from listview then navigates to new page
+        // If their is an error then it will display the exception that was thrown (Errors can happen when converting e.SelectedItem to IGame so this is a precaution to allow the user to report an error)
         private async void GetGamesFromlist_Selected(object sender, SelectedItemChangedEventArgs e)
         {
             try

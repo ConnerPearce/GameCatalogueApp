@@ -30,10 +30,10 @@ namespace GameCatalogueApp.Classes.Pages.LoginPage
                 IUser user = await _userProxy.GetUser(errorMessage, uName, password);
                 if (user != null)
                 {
-                    if (await Storage.ReadTextFileAsync("rememberDetails.txt", errorMessage) == "true")
+                    if (await Storage.ReadTextFileAsync(App.detailsLocation, errorMessage) == "true")
                     {
-                        await Storage.WriteTextFileAsync("username.txt", user.UName, errorMessage);
-                        await Storage.WriteTextFileAsync("password.txt", user.Pwrd, errorMessage);
+                        await Storage.WriteTextFileAsync(App.uNameLocation, user.UName, errorMessage);
+                        await Storage.WriteTextFileAsync(App.pwrdLocation, user.Pwrd, errorMessage);
                     }
 
                     return user;

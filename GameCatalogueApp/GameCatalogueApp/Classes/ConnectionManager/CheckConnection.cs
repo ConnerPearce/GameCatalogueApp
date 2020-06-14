@@ -14,18 +14,15 @@ namespace GameCatalogueApp.Classes.ConnectionManager
         {
             var current = Connectivity.NetworkAccess;
 
-            if (current == NetworkAccess.Internet)
+            if (current != NetworkAccess.Internet)
             {
-                return true;
-            }
-            else
-            {
+
                 connectionAlert("No Connection, Please connect to the internet");
                 return false;
             }
+            else
+                return true;
+
         }
-
-
-
     }
 }

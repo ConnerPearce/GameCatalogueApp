@@ -8,5 +8,17 @@
              x:Class="GameCatalogueApp.MainPage"
              NavigationPage.HasNavigationBar="False">
 
-  
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Image Source="logo.png" VerticalOptions="Center" HorizontalOptions="Center" Grid.Row="2"/>
+        <ActivityIndicator x:Name="activityInd" Grid.Row="3"/>
+    </Grid>
 </ContentPage>

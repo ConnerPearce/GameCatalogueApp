@@ -12,10 +12,15 @@ namespace GameCatalogueApp
     public partial class App : Application
     {
         public static bool isLoggedIn;
-        public static bool useCustomAPI = true;
+        public static bool useCustomAPI;
 
         public static string txtUsername;
         public static string txtPwrd;
+
+        public static readonly string uNameLocation = "username.txt";
+        public static readonly string pwrdLocation = "password.txt";
+        public static readonly string detailsLocation = "rememberDetails.txt";
+        public static readonly string customApiLocation = "custom.txt";
 
         public static IUser user = new User();
 

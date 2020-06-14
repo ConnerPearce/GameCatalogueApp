@@ -29,7 +29,7 @@
                     
                     <TableSection Title="Additional Settings">
                         <SwitchCell x:Name="scRemeber" Text="Remember Me" OnChanged="scRemeber_OnChanged"/>
-                        <SwitchCell x:Name="scMutliSearch" Text="Use Multiple Search Sources" On="True" OnChanged="scMutliSearch_OnChanged"/>
+                        <SwitchCell x:Name="scMutliSearch" Text="Use Custom Game Database" On="True"/>
                         <ViewCell>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -43,7 +43,7 @@
                         </ViewCell>
                         
                         <ViewCell>
-                            <Button x:Name="btnLogout" Text="Logout" HorizontalOptions="Center" Clicked="btnLogout_Clicked"/>
+                            <Button x:Name="btnLogout" Text="Logout" HorizontalOptions="Center" Clicked="btnLogout_Clicked"/>    
                         </ViewCell>
                     </TableSection>
                 </TableRoot>

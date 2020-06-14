@@ -20,11 +20,11 @@ namespace GameCatalogueApp.Pages.Settings
         public delegate void WishlistFunction(object sender, EventArgs e);
         public delegate void CompletedFunction(object sender, EventArgs e);
 
-
         private IContainer container;
-        private HomePage.ErrorHandling _displayError;
-        private WishlistFunction _wishlistFunction;
-        private CompletedFunction _completedFunction;
+
+        private readonly HomePage.ErrorHandling _displayError;
+        private readonly WishlistFunction _wishlistFunction;
+        private readonly CompletedFunction _completedFunction;
 
         public Settings(HomePage.ErrorHandling displayError, WishlistFunction wishlistFunction, CompletedFunction completedFunction)
         {
@@ -39,7 +39,7 @@ namespace GameCatalogueApp.Pages.Settings
         {
             // Sets the switch to be on if rememberDetails.txt returns "true" in text, if its anything else it will set it to off
             // By Having it in this method it will check each tim the page is loaded in case its changed, rather than checking it once when the program loads and not changing it 
-            scRemeber.On = (await Storage.ReadTextFileAsync("rememberDetails.txt", _displayError) == "true") ? true : false;
+            scRemeber.On = (await Storage.ReadTextFileAsync(App.detailsLocation, _displayError) == "true") ? true : false;
             scMutliSearch.On = App.useCustomAPI;
             if (App.isLoggedIn)
             {
@@ -53,8 +53,11 @@ namespace GameCatalogueApp.Pages.Settings
 
         }
 
-        protected override void OnDisappearing()
+        protected override async void OnDisappearing()
         {
+            App.useCustomAPI = scMutliSearch.On;
+            await Storage.WriteTextFileAsync(App.customApiLocation, App.useCustomAPI ? "true" : "false", _displayError);
+
             btnCompleted.Clicked -= new EventHandler(_completedFunction);
             btnWishlist.Clicked -= new EventHandler(_wishlistFunction);
             if(container != null)
@@ -100,6 +103,7 @@ namespace GameCatalogueApp.Pages.Settings
                         LName = txtLName.Text,
                         Pwrd = txtPwrd.Text
                     }, _displayError);
+
                     if (success)
                         await DisplayAlert("Updated!", "Your details have been updated!", "Ok");
                 }
@@ -109,12 +113,21 @@ namespace GameCatalogueApp.Pages.Settings
         // Linked to the Logout button
         private async void Logout()
         {
-            bool accept = await DisplayAlert("Are you sure", "Do you want to logout?", "Yes", "No");
+            bool accept = await DisplayAlert("Confirmation", "Are you sure you want to logout?", "Yes", "No");
             if (accept)
             {
-                await Storage.WriteTextFileAsync("username.txt", "", _displayError);
-                await Storage.WriteTextFileAsync("password.txt", "", _displayError);
+                // Resets all of the local storage items (When you log out your no longer remembered)
+                await Storage.WriteTextFileAsync(App.uNameLocation, "", _displayError);
+                await Storage.WriteTextFileAsync(App.pwrdLocation, "", _displayError);
+                await Storage.WriteTextFileAsync(App.customApiLocation, "false", _displayError);
+                await Storage.WriteTextFileAsync(App.detailsLocation, "false", _displayError);
 
+                // Switches all options to false to clear up things
+                scMutliSearch.On = false;
+                scRemeber.On = false;
+
+                // Resets all App. variables to remove all user info
+                App.useCustomAPI = false;
                 App.user = new User();
                 App.isLoggedIn = false;
                 App.txtUsername = string.Empty;
@@ -128,38 +141,23 @@ namespace GameCatalogueApp.Pages.Settings
         private async void RememberMe()
         {
             bool remember = scRemeber.On;
+            var option = remember ? "true" : "false";
+
+            await Storage.WriteTextFileAsync(App.detailsLocation, option, _displayError);
+
             if (remember)
             {
                 // Remembering details then saves the username and password
-                await Storage.WriteTextFileAsync("rememberDetails.txt", "true", _displayError);
-                await Storage.WriteTextFileAsync("username.txt", App.user.UName, _displayError);
-                await Storage.WriteTextFileAsync("password.txt", App.user.Pwrd, _displayError);
+                await Storage.WriteTextFileAsync(App.uNameLocation, App.user.UName, _displayError);
+                await Storage.WriteTextFileAsync(App.pwrdLocation, App.user.Pwrd, _displayError);
             }
             else
             {
                 // Turning remember off then removes the details
-                await Storage.WriteTextFileAsync("rememberDetails.txt", "false", _displayError);
-                await Storage.WriteTextFileAsync("username.txt", "", _displayError);
-                await Storage.WriteTextFileAsync("password.txt", "", _displayError);
+                await Storage.WriteTextFileAsync(App.uNameLocation, "", _displayError);
+                await Storage.WriteTextFileAsync(App.pwrdLocation, "", _displayError);
             }
+
         }
-
-        private async void scMutliSearch_OnChanged(object sender, ToggledEventArgs e)
-        {
-            var multi = scMutliSearch.On;
-            if (multi)
-            {
-                await Storage.WriteTextFileAsync("custom.txt", "true", _displayError);
-                App.useCustomAPI = true;
-            }
-            else
-            {
-                await Storage.WriteTextFileAsync("custom.txt", "false", _displayError);
-                App.useCustomAPI = false;
-
-            }
-        }
-
-
     }
 }

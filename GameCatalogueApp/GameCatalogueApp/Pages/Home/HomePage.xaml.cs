@@ -30,11 +30,11 @@ namespace GameCatalogueApp.Pages.Home
         public delegate void Search(string message);
 
         // Creating local instances of the delegates to use in this page
-        private LoginFunction _loginFunction;
-        private UserFunction _userFunction;
-        private ErrorHandling _errorHandling;
-        private Search _search;
-        private GameList _gameList;
+        private readonly LoginFunction _loginFunction;
+        private readonly UserFunction _userFunction;
+        private readonly ErrorHandling _errorHandling;
+        private readonly Search _search;
+        private readonly GameList _gameList;
 
         // This is the home Page and will be loaded first
         public HomePage(LoginFunction loginFunction, UserFunction userFunction, Search search, ErrorHandling errorHandling, GameList gameList)
@@ -74,6 +74,11 @@ namespace GameCatalogueApp.Pages.Home
                 btnLoginUser.Clicked -= new EventHandler(_loginFunction);
         }
 
-        private void searchBarGame_SearchButtonPressed(object sender, EventArgs e) => _search(searchBarGame.Text);
+        private void searchBarGame_SearchButtonPressed(object sender, EventArgs e) 
+        {
+            activityIndicator.IsRunning = true;
+            _search(searchBarGame.Text);
+            activityIndicator.IsRunning = false;
+        }
     }
 }

@@ -12,9 +12,9 @@ namespace GameCatalogueApp.Classes.Pages.WishlistPlayedPage
 {
     public class WishlistPlayedBackend : IWishlistPlayedBackend
     {
-        ICheckConnection _checkConnection;
-        IWishlistPlayedProxy _wishlistPlayedProxy;
-        ICustomGameProxy _customGameProxy;
+        private readonly ICheckConnection _checkConnection;
+        private readonly IWishlistPlayedProxy _wishlistPlayedProxy;
+        private readonly ICustomGameProxy _customGameProxy;
 
 
         public WishlistPlayedBackend(ICheckConnection checkConnection, IWishlistPlayedProxy wishlistPlayedProxy, ICustomGameProxy customGameProxy)

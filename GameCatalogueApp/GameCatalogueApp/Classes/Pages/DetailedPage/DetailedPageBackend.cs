@@ -39,10 +39,9 @@ namespace GameCatalogueApp.Classes.Pages.DetailedPage
             if (connection)
             {
                 var games = await _gameProxy.GetSinlgeGameInfo(slug, errorMessage);
-                if (games != null)
-                    return games;
 
-                return null;
+                return games != null ? games : null;
+
             }
             else
                 return null;            
@@ -56,10 +55,8 @@ namespace GameCatalogueApp.Classes.Pages.DetailedPage
             if (connection)
             {
                 var games = await _customGameProxy.GetGameByID(errorMessage, id);
-                if (games != null)
-                    return games;
-                else
-                   return null;
+
+                return games != null ? games : null;
             }
             else
                 return null;
@@ -69,10 +66,9 @@ namespace GameCatalogueApp.Classes.Pages.DetailedPage
         public async Task<bool> AddToWishlistPlayed<T>(HomePage.ErrorHandling errorMessage, T item, string itemChoice)
         {
             bool connection = _checkConnection.hasConnection(errorMessage);
+
             if (connection)
-            {
                return await _wishlistPlayedProxy.PostItem(errorMessage, item, itemChoice);
-            }
             else
                 return false;
         }
@@ -81,10 +77,9 @@ namespace GameCatalogueApp.Classes.Pages.DetailedPage
         public async Task<bool> DeleteFromWishlistPlayed(HomePage.ErrorHandling errorMessage, string itemChoice, string id)
         {
             bool connection = _checkConnection.hasConnection(errorMessage);
+
             if (connection)
-            {
                 return await _wishlistPlayedProxy.DeleteItem(errorMessage, itemChoice, id);
-            }
             else
                 return false;
         }
