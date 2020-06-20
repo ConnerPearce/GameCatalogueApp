@@ -15,6 +15,10 @@ using Xamarin.Forms.Xaml;
 
 namespace GameCatalogueApp.Pages.Home
 {
+    // This is my home page
+    // I use it to pass delegates throughout my entire program
+    // Its also the page that displays the search bar when the program starts
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage
     {
@@ -76,6 +80,7 @@ namespace GameCatalogueApp.Pages.Home
 
         private void searchBarGame_SearchButtonPressed(object sender, EventArgs e) 
         {
+            // Runs the search function
             activityIndicator.IsRunning = true;
             _search(searchBarGame.Text);
             activityIndicator.IsRunning = false;

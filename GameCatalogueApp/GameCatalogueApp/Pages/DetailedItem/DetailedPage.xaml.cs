@@ -9,17 +9,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace GameCatalogueApp.Pages.DetailedItem
 {
+    // This page is for a detailed view of games
+    // This manages displaying detailed view and adding items to a wishlist and played as well as removing them
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DetailedPage : ContentPage
     {
+        // Variables for this app
+
+        // Used for Dependancy Injection
         private IContainer container;
         private IGame game;
+
+        // variables used 
         private readonly string _id;
         private bool isRunning;
         public static string wishlistID;
@@ -62,6 +69,7 @@ namespace GameCatalogueApp.Pages.DetailedItem
                 btnWishlist.IsVisible = false;
                 btnRemoveWish.IsVisible = false;
             }
+
             if(!isRunning)
             {
                 isRunning = true;
@@ -108,16 +116,20 @@ namespace GameCatalogueApp.Pages.DetailedItem
                             btnRemoveComp.IsVisible = isPlayed;
                             btnCompleted.IsVisible = isPlayed ? false : true;
                         }
+
                         // Below just fills the xaml with text, Binding wouldnt work here as i need to filter through lists
                         lblGameName.Text = game.name;
                         lblGenre.Text = game.Genre;
                         lblDeveloper.Text = game.Developer;
+
                         // This filters through each platform in the list then concatenates it to the lblPlatforms.Text to be displayed
                         foreach (var item in game.Platform)
                         {
                             lblPlatforms.Text += $"{item}, ";
                         }
                         lblRating.Text = game.Rating.ToString();
+
+                        // Gets the image from a URI (Does not display (Unknown reason, no error given))
                         imgGamePhoto = new Image()
                         {
                             Aspect = Aspect.AspectFit,
@@ -129,25 +141,33 @@ namespace GameCatalogueApp.Pages.DetailedItem
                 else // Uses Rawg API
                 {
                     var game = await app.GetGame(id, _errorHandling);
+                    // Changes button visibility since you can not add Rawg API items to the db
                     btnCompleted.IsVisible = false;
                     btnRemoveComp.IsVisible = false;
                     btnWishlist.IsVisible = false;
                     btnRemoveWish.IsVisible = false;
                     if (game != null)
                     {
+                        // Assigns variables to be displayed
                         lblGameName.Text = game.name;
                         lblGenre.Text = game.genres.First().name;
                         lblDeveloper.Text = game.publishers.First().name;
+
+                        // Concatonates the platform name to the string to be displayed
                         foreach (var item in game.platforms)
                         {
                             lblPlatforms.Text += $"{item.platform.name}, ";
                         }
+
                         lblRating.Text = game.rating.ToString();
+
+                        // Gets the image from a URI (Does not display (Unknown reason, no error given))
                         imgGamePhoto = new Image()
                         {
                             Aspect = Aspect.AspectFit,
                             Source = ImageSource.FromUri(new Uri(game.background_image))
                         };
+
                         lblSummary.Text = game.description;
                     }
                 }
@@ -155,6 +175,7 @@ namespace GameCatalogueApp.Pages.DetailedItem
         }
 
         // This is a shared event handler
+        // This adds items to either Wishlist or Played games depending on which button sent the event
         private async void AddToList(object sender, EventArgs e)
         {
             try
@@ -163,33 +184,45 @@ namespace GameCatalogueApp.Pages.DetailedItem
                 using (var scope = container.BeginLifetimeScope())
                 {
                     var app = scope.Resolve<IDetailedPageBackend>();
+
+                    // Creating an object of the sender ( In this case its a button )
                     var btn = (Button)sender;
+
+                    // Resets variables
                     string choice = string.Empty;
                     bool success = false;
 
                     // By checking the senders ID i can see which button sent the click event
                     if (btn.Id == btnCompleted.Id)
                     {
+                        // Changes choice to "Played"
+                        // Since my AddToWishlistPlayed is generic it needs to know which table to insert data into
                         choice = "Played";
                         success = await app.AddToWishlistPlayed(_errorHandling, new Classes._Custom_API.Data.Played { GameID = game.id, UId = App.user.Id }, choice);
 
+                        // Changes the buttons to no longer add to played it will now be remove from played
                         if (success)
                         {
                             btnRemoveComp.IsVisible = true;
                             btnCompleted.IsVisible = false;
                         }
                     }
-                    else if(btn.Id == btnWishlist.Id)
+                    else if (btn.Id == btnWishlist.Id)
                     {
+                        // Changes choice to "Wishlist"
+                        // Since my AddToWishlistPlayed is generic it needs to know which table to insert data into
                         choice = "Wishlist";
-
                         success = await app.AddToWishlistPlayed(_errorHandling, new Classes._Custom_API.Data.Wishlist { GameID = game.id, UId = App.user.Id }, choice);
+
+                        // Changes the buttons to no longer add to wishlist it will now be remove from wishlist
                         if (success)
                         {
-                            btnRemoveComp.IsVisible = true;
-                            btnCompleted.IsVisible = false;
+                            btnRemoveWish.IsVisible = true;
+                            btnWishlist.IsVisible = false;
                         }
                     }
+
+                    // Displays an alert showing that the item has been added
                     if (success)
                         await DisplayAlert("Added Item", $"Added {game.name} to {choice}", "Ok");
                 }
@@ -208,14 +241,23 @@ namespace GameCatalogueApp.Pages.DetailedItem
                 using (var scope = container.BeginLifetimeScope())
                 {
                     var app = scope.Resolve<IDetailedPageBackend>();
+
+                    // Creating an object of the sender ( In this case its a button )
                     var btn = (Button)sender;
+
+                    // Resets variables
                     string choice = string.Empty;
                     bool success = false;
+
+                    // By checking the senders ID i can see which button sent the click event
                     if (btn.Id == btnRemoveComp.Id)
                     {
+                        // Changes choice to "Played"
+                        // Since my DeleteFromWishlistPlayed is generic it needs to know which table to delete data from
                         choice = "Played";
-
                         success = await app.DeleteFromWishlistPlayed(_errorHandling, choice, playedID);
+
+                        // Changes the buttons to no longer remove from played it will now be add to played
                         if (success)
                         {
                             btnCompleted.IsVisible = true;
@@ -224,9 +266,12 @@ namespace GameCatalogueApp.Pages.DetailedItem
                     }
                     else if (btn.Id == btnRemoveWish.Id)
                     {
+                        // Changes choice to "Wishlist"
+                        // Since my DeleteFromWishlistPlayed is generic it needs to know which table to delete data from
                         choice = "Wishlist";
-
                         success = await app.DeleteFromWishlistPlayed(_errorHandling, choice, wishlistID);
+
+                        // Changes the buttons to no longer remove from played it will now be add to played
                         if (success)
                         {
                             btnWishlist.IsVisible = true;
@@ -234,6 +279,8 @@ namespace GameCatalogueApp.Pages.DetailedItem
                         }
 
                     }
+
+                    // Displays an alert showing that the item has been added
                     if (success)
                         await DisplayAlert("Item Removed", $"Removed {game.name} from {choice}", "Ok");
                 }

@@ -94,9 +94,11 @@ namespace GameCatalogueApp.Classes.Pages.DetailedPage
                 var items = await _wishlistPlayedProxy.IsOnT<Wishlist>("Wishlist", id);
                 if (items != null)
                 {
+                    // Filters through the item to find if there are any items where the game id is already in there
                     var temp = items.Where(e => e.GameID == item.id).FirstOrDefault();
                     if (temp != null)
                     {
+                        // Sets the ID so the user can delete the item later on
                         GameCatalogueApp.Pages.DetailedItem.DetailedPage.wishlistID = temp.Id;
                         return true;
                     }
@@ -114,12 +116,14 @@ namespace GameCatalogueApp.Classes.Pages.DetailedPage
             bool connection = _checkConnection.hasConnection(errorMessage);
             if (connection)
             {
-                var items = await _wishlistPlayedProxy.IsOnT<Played>("Played", id);
+                var items = await _wishlistPlayedProxy.IsOnT<Played>("Played", id); // Grabs all items associated with a user id
                 if (items != null)
                 {
+                    // Filters through the item to find if there are any items where the game id is already in there
                     var temp = items.Where(e => e.GameID == item.id).FirstOrDefault();
                     if (temp != null)
                     {
+                        // Sets the ID so the user can delete the item later on
                         GameCatalogueApp.Pages.DetailedItem.DetailedPage.playedID = temp.Id;
                         return true;
                     }

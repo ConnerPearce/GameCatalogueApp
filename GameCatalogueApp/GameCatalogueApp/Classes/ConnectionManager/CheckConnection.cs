@@ -16,7 +16,7 @@ namespace GameCatalogueApp.Classes.ConnectionManager
 
             if (current != NetworkAccess.Internet)
             {
-
+                // Returns an error if there is no internet
                 connectionAlert("No Connection, Please connect to the internet");
                 return false;
             }

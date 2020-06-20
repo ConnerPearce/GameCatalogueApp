@@ -13,19 +13,24 @@ using Xamarin.Forms.Xaml;
 
 namespace GameCatalogueApp.Pages.Registration
 {
+    // This page is my registration page
+    // It manages registering a user
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Registration : ContentPage
     {
         private IContainer container;
 
+        // My error handling delegate
         private readonly HomePage.ErrorHandling _errorHandling;
 
         public Registration(HomePage.ErrorHandling errorHandling)
         {
-            InitializeComponent();
             _errorHandling = errorHandling;
+            InitializeComponent();
         }
 
+        // This is called upon leaving the page
         protected override void OnDisappearing() 
         { 
             if(container != null)
@@ -41,13 +46,15 @@ namespace GameCatalogueApp.Pages.Registration
 
         }
 
+        // Button click will call my RegisterFunction method
         private void btnRegister_Clicked(object sender, EventArgs e) => RegisterFunction();
 
+        // Registers a user
         public async void RegisterFunction()
         {
+            // Validation check, displays an error if somethings wrong with appropriate message
             if (string.IsNullOrEmpty(txtUserName.Text))
                 _errorHandling("Please enter a username");
-
             else if (string.IsNullOrEmpty(txtFName.Text))
                 _errorHandling("Please enter your first name");
             else if (string.IsNullOrEmpty(txtLName.Text))
@@ -62,6 +69,7 @@ namespace GameCatalogueApp.Pages.Registration
                 _errorHandling("Please make sure your passwords match");
             else
             {
+                // Informs the user their account is being created
                 await DisplayAlert("Progress", "Creating account now", "Ok");
                 container = DependancyInjection.Configure();
                 using (var scope = container.BeginLifetimeScope())
@@ -77,10 +85,12 @@ namespace GameCatalogueApp.Pages.Registration
                     });
                     if (success)
                     {
+                        // If the user is created successfully then it will say so and push you to the main page
                         await DisplayAlert("Account Created", "Your account has been created\nYou can now sign in", "Ok");
                         await Navigation.PushAsync(new MainPage());
                     }
 
+                    // If the user isnt created successfully my Error Handling Delegate will display the error reason
                 }
             }
 

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace GameCatalogueApp.Classes
 {
+    // Manages searching for games in my program
+
     public class SearchBackend : ISearchBackend
     {
         // Dependancy Injection Variables
@@ -25,22 +27,26 @@ namespace GameCatalogueApp.Classes
             _customGameProxy = customGameProxy;
         }
 
+        // Gets games from Rawg Database
         public async Task<IGameRootObject> GetGames(string search, HomePage.ErrorHandling errorMessage)
         {
-
+            // Checks connection
             bool connection = _checkConnection.hasConnection(errorMessage);
             if (connection)
             {
+                // If it has something to search for
                 if (!string.IsNullOrEmpty(search))
                 {
+                    // Gets games by search
                     var games = await _gameProxy.GetGameBySearch(search, errorMessage);
                     if (games == null)
                         return null;
                     else
                         return games;
                 }
-                else
+                else // If their is no input it should grab all games
                 {
+                    // Gets all games
                     var games = await _gameProxy.GetAllGameInfo(errorMessage);
                     if (games == null)
                         return null;
@@ -52,6 +58,8 @@ namespace GameCatalogueApp.Classes
                 return null;
         }
 
+        // Gets games from my Custom API
+        // Works the same as above but it gets it from my custom API instead of the Rawg API
         public async Task<List<Game>> GetCustomGames(string search, HomePage.ErrorHandling errorMessage)
         {
             bool connection = _checkConnection.hasConnection(errorMessage);

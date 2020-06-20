@@ -24,6 +24,7 @@ namespace GameCatalogueApp
     public partial class MainPage : ContentPage
     {
         // This is used for my dependancy injection
+        // System.ComponentModel also contains an IContainer so i needed to specific Autoface.IContainer this time around unlike other classes
         private Autofac.IContainer container = null;
 
         // These bools just keep track of running methods so they dont run more than once (i.e stops multiple button clicks)
@@ -48,16 +49,16 @@ namespace GameCatalogueApp
             {
                 activityInd.IsRunning = true;
                 // Checks local storage for users information
-                App.txtUsername = await Storage.ReadTextFileAsync(App.uNameLocation, DisplayError);
-                App.txtPwrd = await Storage.ReadTextFileAsync(App.pwrdLocation, DisplayError);
+                var txtUsername = await Storage.ReadTextFileAsync(App.uNameLocation, DisplayError);
+                var txtPwrd = await Storage.ReadTextFileAsync(App.pwrdLocation, DisplayError);
 
                 // Checks if the app wants to use the custom api or RAWG Api
                 // Is stored locally as a string of either true or false
-                // Converts it to a bool for simplicity sake as it cant be saved as anything less than a string
-                App.useCustomAPI = Convert.ToBoolean(await Storage.ReadTextFileAsync(App.customApiLocation, DisplayError));
+                // Shorthand for multiple if statements checking if await Storage.ReadTextFileAsync(App.detailsLocation, _displayError) is equal to "true", if it is then it will return true, if not then it will return false
+                App.useCustomAPI = await Storage.ReadTextFileAsync(App.customApiLocation, DisplayError) == "true"? true : false;
 
                 // If the username and password are not empty (Details are being remembered) then it will run this to log the user in
-                if (!string.IsNullOrEmpty(App.txtUsername) && !string.IsNullOrEmpty(App.txtPwrd))
+                if (!string.IsNullOrEmpty(txtUsername) && !string.IsNullOrEmpty(txtPwrd))
                 {
                     container = DependancyInjection.Configure();
                     using (var scope = container.BeginLifetimeScope())
@@ -65,7 +66,7 @@ namespace GameCatalogueApp
                         var app = scope.Resolve<ILoginBackend>();
 
                         // If it runs into errors trying to log the user in then it'll display an alert, this is all handled automatically in my app using the DisplayError method which is a delegate
-                        var person = await app.GetUser(App.txtUsername, App.txtPwrd, DisplayError);
+                        var person = await app.GetUser(txtUsername, txtPwrd, DisplayError);
                         if (person != null)
                         {
                             App.isLoggedIn = true;
@@ -83,6 +84,7 @@ namespace GameCatalogueApp
         // Clears up containers and resets the activity Indicator if its still running
         protected override void OnDisappearing() 
         {
+
             if (container != null)
                 container.Dispose();
             activityInd.IsRunning = false;

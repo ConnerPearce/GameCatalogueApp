@@ -15,11 +15,15 @@ using Xamarin.Forms.Xaml;
 
 namespace GameCatalogueApp.Pages.Login
 {
+    // This is page is for my login
+    // This page manages my login function
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Login : ContentPage
     {
         private IContainer container;
 
+        // This creates an instance of the delegate from my HomePage.Xaml.cs
         private readonly HomePage.ErrorHandling _errorHandling;
 
         public Login(HomePage.ErrorHandling errorHandling)
@@ -30,7 +34,9 @@ namespace GameCatalogueApp.Pages.Login
 
         protected override async void OnAppearing()
         {
-            chkRemember.IsChecked = (await Storage.ReadTextFileAsync(App.detailsLocation, _errorHandling) == "true") ? true : false;
+            // Switches the remember me button to be checked or not based on whats stored locally
+            // Shorthand for multiple if statements checking if await Storage.ReadTextFileAsync(App.detailsLocation, _displayError) is equal to "true", if it is then it will return true, if not then it will return false
+            chkRemember.IsChecked = await Storage.ReadTextFileAsync(App.detailsLocation, _errorHandling) == "true" ? true : false;
         }
 
 
@@ -45,9 +51,10 @@ namespace GameCatalogueApp.Pages.Login
 
         private void Login_Clicked(object sender, EventArgs e) => LoginFunction();
 
-
+        // This method manages logging in
         public async void LoginFunction()
         {
+            // Validation check
             if (string.IsNullOrEmpty(txtUsername.Text))
                 _errorHandling("Please enter a username");
             else if (string.IsNullOrEmpty(txtPassword.Text))
@@ -57,6 +64,7 @@ namespace GameCatalogueApp.Pages.Login
                 container = DependancyInjection.Configure();
                 using (var scope = container.BeginLifetimeScope())
                 {
+                    // If the user wants to be remember then the option is saved to their local storage
                     var option = chkRemember.IsChecked ? "true" : "false";
                     await Storage.WriteTextFileAsync(App.detailsLocation, option, _errorHandling);
 
@@ -66,6 +74,9 @@ namespace GameCatalogueApp.Pages.Login
                     // This is a shorthand version of an if else statement i had in my program, This way is less code and also works faster
                     // Technically it is the same as the if else statement commented out below but is much faster
                     var temp = user != null ? (App.isLoggedIn = true, App.user = user) : (App.isLoggedIn = false, App.user = new User());
+
+                    // if the user is logged in then it will push the main page
+                    // If not then there will be an error message
                     if (temp.Item1)
                         await Navigation.PushAsync(new MainPage());
 

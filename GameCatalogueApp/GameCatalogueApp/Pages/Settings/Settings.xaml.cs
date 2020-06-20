@@ -14,15 +14,22 @@ using Xamarin.Forms.Xaml;
 
 namespace GameCatalogueApp.Pages.Settings
 {
+   // This page is my settings page
+   // It handles all local settings as well as updating user info
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Settings : ContentPage
     {
+        // Since im pushing straight from my main page to here i need to respecify the delegates
         public delegate void WishlistFunction(object sender, EventArgs e);
         public delegate void CompletedFunction(object sender, EventArgs e);
 
         private IContainer container;
 
+        // This is the delegate that handles all my errors
         private readonly HomePage.ErrorHandling _displayError;
+
+        // Below is for both my button clicks to navigate to the wishlist and completed page
         private readonly WishlistFunction _wishlistFunction;
         private readonly CompletedFunction _completedFunction;
 
@@ -37,17 +44,22 @@ namespace GameCatalogueApp.Pages.Settings
 
         protected override async void OnAppearing()
         {
-            // Sets the switch to be on if rememberDetails.txt returns "true" in text, if its anything else it will set it to off
-            // By Having it in this method it will check each tim the page is loaded in case its changed, rather than checking it once when the program loads and not changing it 
-            scRemeber.On = (await Storage.ReadTextFileAsync(App.detailsLocation, _displayError) == "true") ? true : false;
+            // Changes scRemember to be on if remember me is selected and stored locally
+            // Shorthand for multiple if statements checking if await Storage.ReadTextFileAsync(App.detailsLocation, _displayError) is equal to "true", if it is then it will return true, if not then it will return false
+            scRemeber.On = await Storage.ReadTextFileAsync(App.detailsLocation, _displayError) == "true" ? true : false;
+
+            // If the user wants to use the custom API this is true otherwise they will use the RAWG Api
             scMutliSearch.On = App.useCustomAPI;
             if (App.isLoggedIn)
             {
+                // Displays user info for updating (Unable to show if the user isnt logged in)
                 tblAccountSettings.IsVisible = true;
                 tblsAccount.BindingContext = App.user;
             }
-            else
+            else // Hides the account settings section if the user isnt logged in
                 tblAccountSettings.IsVisible = false;
+
+            // Assigns clicked event handlers
             btnCompleted.Clicked += new EventHandler(_completedFunction);
             btnWishlist.Clicked += new EventHandler(_wishlistFunction);
 
@@ -55,9 +67,14 @@ namespace GameCatalogueApp.Pages.Settings
 
         protected override async void OnDisappearing()
         {
+            // Sets options upon leaving the page
             App.useCustomAPI = scMutliSearch.On;
+
+            // Saves the wether or not to use the custom API or Rawg API
+            // (App.useCustomAPI ? "true" : "false") is just short hand for an if statement saying if app.useCustomAPI is true then "true" will be passed else it will pass "false"
             await Storage.WriteTextFileAsync(App.customApiLocation, App.useCustomAPI ? "true" : "false", _displayError);
 
+            // Removes event handlers
             btnCompleted.Clicked -= new EventHandler(_completedFunction);
             btnWishlist.Clicked -= new EventHandler(_wishlistFunction);
             if(container != null)
@@ -76,9 +93,10 @@ namespace GameCatalogueApp.Pages.Settings
         // Linked to the submitChanges button
         private async void ChangeUserInfo()
         {
+            // Validates info entered if it isnt empty
+            // If it is then it will display a appropriete error 
             if (string.IsNullOrEmpty(txtUname.Text))
                 _displayError("Please enter a username");
-
             else if (string.IsNullOrEmpty(txtFName.Text))
                 _displayError("Please enter your first name");
             else if (string.IsNullOrEmpty(txtLName.Text))
@@ -89,6 +107,7 @@ namespace GameCatalogueApp.Pages.Settings
                 _displayError("Please enter a password");
             else
             {
+                // Informs the user their account is being updated
                 await DisplayAlert("Progress", "Updating Account Now", "Ok");
                 container = DependancyInjection.Configure();
                 using (var scope = container.BeginLifetimeScope())
@@ -104,6 +123,7 @@ namespace GameCatalogueApp.Pages.Settings
                         Pwrd = txtPwrd.Text
                     }, _displayError);
 
+                    // If they user was updated successfully
                     if (success)
                         await DisplayAlert("Updated!", "Your details have been updated!", "Ok");
                 }
@@ -113,7 +133,9 @@ namespace GameCatalogueApp.Pages.Settings
         // Linked to the Logout button
         private async void Logout()
         {
+            // Checks if the user is sure they want to logout and assigns their answer to a bool
             bool accept = await DisplayAlert("Confirmation", "Are you sure you want to logout?", "Yes", "No");
+
             if (accept)
             {
                 // Resets all of the local storage items (When you log out your no longer remembered)
@@ -123,6 +145,8 @@ namespace GameCatalogueApp.Pages.Settings
                 await Storage.WriteTextFileAsync(App.detailsLocation, "false", _displayError);
 
                 // Switches all options to false to clear up things
+                // Since you can no longer switch back to Rawg API if you are on the custom one
+                // This way if they are logged out then they can use the more robust api as a general thing rather than the custom one that can add to wishlist etc
                 scMutliSearch.On = false;
                 scRemeber.On = false;
 
@@ -130,9 +154,8 @@ namespace GameCatalogueApp.Pages.Settings
                 App.useCustomAPI = false;
                 App.user = new User();
                 App.isLoggedIn = false;
-                App.txtUsername = string.Empty;
-                App.txtPwrd = string.Empty;
 
+                // Returns to main page and reloads the app with no user info anymore
                 await Navigation.PushAsync(new MainPage());
             }
         }
@@ -141,9 +164,9 @@ namespace GameCatalogueApp.Pages.Settings
         private async void RememberMe()
         {
             bool remember = scRemeber.On;
-            var option = remember ? "true" : "false";
 
-            await Storage.WriteTextFileAsync(App.detailsLocation, option, _displayError);
+            // Sets the remember me information in local storage 
+            await Storage.WriteTextFileAsync(App.detailsLocation, remember ? "true" : "false", _displayError);
 
             if (remember)
             {

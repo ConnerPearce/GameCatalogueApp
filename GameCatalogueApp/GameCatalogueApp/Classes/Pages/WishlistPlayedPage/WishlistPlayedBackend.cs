@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace GameCatalogueApp.Classes.Pages.WishlistPlayedPage
 {
+    // This page manages the main functionality of my wishlist
+
     public class WishlistPlayedBackend : IWishlistPlayedBackend
     {
         private readonly ICheckConnection _checkConnection;
@@ -24,19 +26,29 @@ namespace GameCatalogueApp.Classes.Pages.WishlistPlayedPage
             _customGameProxy = customGameProxy;
         }
 
+        // Get the wishlist
         public async Task<List<Game>> GetWishlist(HomePage.ErrorHandling errorMessage, string id)
         {
+            // Checks the internet connection
             bool connection = _checkConnection.hasConnection(errorMessage);
             if (connection)
             {
+                // Checks the id isnt null
                 if (id != null)
                 {
+                    // Gets the wishlist 
                     var items = await _wishlistPlayedProxy.GetItems<Wishlist>(errorMessage, "Wishlist", id);
+
+                    // If it was able to get items back
                     if (items != null)
                     {
                         List<Game> games = new List<Game>();
+
+                        // Gets all the games asociated with the wishlist gameID
+                        // Since MongoDB cant do inner joins this was the closest thing i could do
                         foreach (var item in items)
                         {
+                            // Each item in the wishlist a search will be made that grabs the game matching its ID
                             games.Add((Game)await _customGameProxy.GetGameByID(errorMessage, item.GameID));
                         }
                         return games;
@@ -46,6 +58,7 @@ namespace GameCatalogueApp.Classes.Pages.WishlistPlayedPage
                 }
                 else
                 {
+                    // Using my delegate it will return the error message that the user must be logged in
                     errorMessage("Must be logged in");
                     return null;
                 }
@@ -54,6 +67,8 @@ namespace GameCatalogueApp.Classes.Pages.WishlistPlayedPage
                 return null;
         }
 
+        // Gets the items on played table
+        // Essentially mirrors the GetWishlist but instead gets the played items
         public async Task<List<Game>> GetPlayed(HomePage.ErrorHandling errorMessage, string id)
         {
             bool connection = _checkConnection.hasConnection(errorMessage);

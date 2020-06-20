@@ -36,6 +36,9 @@ namespace GameCatalogueApp
         private static readonly string customAPIbaseAddress = "https://gamecatalog.api.labnet.nz/";
         private static readonly string baseAddress = "https://api.rawg.io/api/";
 
+
+        // By registering all my classes and having an interface i can use this to inject items during build time rather than run time, increasing speed while running
+        // By calling this Configure method it will return an IContainer that includes all the types for my entire program
         public static IContainer Configure()
         {
             var builder = new ContainerBuilder();
@@ -54,6 +57,7 @@ namespace GameCatalogueApp
 
             // HELPER CLASSES //
             builder.RegisterType<CheckConnection>().As<ICheckConnection>();
+
             // PAGE BACKENDS //
             builder.RegisterType<SearchBackend>().As<ISearchBackend>();
             builder.RegisterType<DetailedPageBackend>().As<IDetailedPageBackend>();
@@ -62,11 +66,14 @@ namespace GameCatalogueApp
             builder.RegisterType<SettingsBackend>().As<ISettingsBackend>();
             builder.RegisterType<WishlistPlayedBackend>().As<IWishlistPlayedBackend>();
 
+            // By specifying a return i can inject specific variables into the constructors such as the base address for my api
+
             // API CLASSES //
             builder.Register<GameProxy>((c, p) =>
             {
                 return new GameProxy(baseAddress);
             }).As<IGameProxy>();
+
 
             // CUSTOM API CLASSES //
             builder.Register<UserProxy>((c, p) =>

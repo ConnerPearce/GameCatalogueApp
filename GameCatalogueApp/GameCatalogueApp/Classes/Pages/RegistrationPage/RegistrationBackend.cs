@@ -9,8 +9,12 @@ using System.Threading.Tasks;
 
 namespace GameCatalogueApp.Classes.Pages.RegistrationPage
 {
+    // This is the backend for my registration page
+    // It manages the registration section
+
     public class RegistrationBackend : IRegistrationBackend
     {
+        // Dependancy injection variables
         private readonly ICheckConnection _checkConnection;
         private readonly IUserProxy _userProxy;
 
@@ -20,6 +24,7 @@ namespace GameCatalogueApp.Classes.Pages.RegistrationPage
             _userProxy = userProxy;
         }
 
+        // Registers the user
         public async Task<bool> RegisterUser(HomePage.ErrorHandling errorMessage, User user)
         {
             bool connection = _checkConnection.hasConnection(errorMessage);

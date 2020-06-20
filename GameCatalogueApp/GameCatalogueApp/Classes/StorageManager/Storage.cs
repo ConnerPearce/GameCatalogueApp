@@ -12,6 +12,8 @@ using Xamarin.Forms;
 
 namespace GameCatalogueApp.Classes.StorageManager
 {
+
+
     public class Storage
     {
         // read a text file from the app's local folder

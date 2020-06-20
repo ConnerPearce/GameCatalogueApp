@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace GameCatalogueApp.Classes.Pages.SettingsPage
 {
+    // This manages my settings page and serves as the backend
+
     public class SettingsBackend : ISettingsBackend
     {
         private readonly ICheckConnection _checkConnection;
@@ -20,13 +22,15 @@ namespace GameCatalogueApp.Classes.Pages.SettingsPage
             _userProxy = userProxy;
         }
 
+        // This method updates the user details
         public async Task<bool> UpdateUser(User user, HomePage.ErrorHandling errorMessage)
         {
+            // Checks internet connection
             bool connection = _checkConnection.hasConnection(errorMessage);
             if (connection)
-                return await _userProxy.PutUser(errorMessage, user);
+                return await _userProxy.PutUser(errorMessage, user); // Returns wether or not the user was added succesfully
             else
-                return false;
+                return false; // If theres no connection it will return false
         }
     }
 }
