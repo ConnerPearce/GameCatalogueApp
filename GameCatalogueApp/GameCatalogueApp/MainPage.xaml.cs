@@ -55,7 +55,7 @@ namespace GameCatalogueApp
                 // Checks if the app wants to use the custom api or RAWG Api
                 // Is stored locally as a string of either true or false
                 // Shorthand for multiple if statements checking if await Storage.ReadTextFileAsync(App.detailsLocation, _displayError) is equal to "true", if it is then it will return true, if not then it will return false
-                App.useCustomAPI = await Storage.ReadTextFileAsync(App.customApiLocation, DisplayError) == "true"? true : false;
+                App.useCustomAPI = await Storage.ReadTextFileAsync(App.customApiLocation, DisplayError) == "true" ? true : false;
 
                 // If the username and password are not empty (Details are being remembered) then it will run this to log the user in
                 if (!string.IsNullOrEmpty(txtUsername) && !string.IsNullOrEmpty(txtPwrd))

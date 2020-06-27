@@ -25,12 +25,16 @@ namespace GameCatalogueApp.Classes.Pages.SettingsPage
         // This method updates the user details
         public async Task<bool> UpdateUser(User user, HomePage.ErrorHandling errorMessage)
         {
-            // Checks internet connection
-            bool connection = _checkConnection.hasConnection(errorMessage);
-            if (connection)
-                return await _userProxy.PutUser(errorMessage, user); // Returns wether or not the user was added succesfully
-            else
-                return false; // If theres no connection it will return false
+            // This is a short hand form of the code below, I learnt to do it this way to shorten down code and challenge myself to minimize my code
+            return _checkConnection.hasConnection(errorMessage) ? await _userProxy.PutUser(errorMessage, user) : false;
+
+            // Original Code
+
+            //bool connection = _checkConnection.hasConnection(errorMessage);
+            //if (connection)
+            //    return await _userProxy.PutUser(errorMessage, user); 
+            //else
+            //    return false; 
         }
     }
 }

@@ -75,8 +75,7 @@ namespace GameCatalogueApp.API
             {
                 errorMessage(ex.Message);
                 return null;
-            }
-            
+            }           
         }
 
 

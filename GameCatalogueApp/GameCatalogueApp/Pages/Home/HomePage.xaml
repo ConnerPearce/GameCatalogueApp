@@ -19,7 +19,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-         
+
             <Grid HeightRequest="50">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -42,6 +42,4 @@
 
         </Grid>
     </ContentPage.Content>
-
-
 </ContentPage>

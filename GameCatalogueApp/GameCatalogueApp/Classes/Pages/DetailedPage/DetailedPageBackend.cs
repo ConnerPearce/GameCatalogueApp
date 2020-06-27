@@ -31,58 +31,31 @@ namespace GameCatalogueApp.Classes.Pages.DetailedPage
             _wishlistPlayedProxy = wishlistPlayedProxy;
         }
 
-        // Retrieves a single game from the RAWG Api
-        public async Task<ISingleGameRootObject> GetGame(string slug, HomePage.ErrorHandling errorMessage)
-        {
+        // Retrieves a single game from the RAWG Api //
+        public async Task<ISingleGameRootObject> GetGame(string slug, HomePage.ErrorHandling errorMessage) =>
+            // First checks if there is a connection
+            // If there is a connection it will Get the Game info from the API
+            // The ?? checks if the item is null, if its null then it will return null, if its not null then it will return the ISingleGameRoot Object
+            // Finally if the there is no connection then this method returns null
+             _checkConnection.hasConnection(errorMessage) ? await _gameProxy.GetSinlgeGameInfo(slug, errorMessage) ?? null : null;           
 
-            bool connection = _checkConnection.hasConnection(errorMessage);
-            if (connection)
-            {
-                var games = await _gameProxy.GetSinlgeGameInfo(slug, errorMessage);
+        // Retrieves a single game from custom API //
+        public async Task<IGame> GetCustomGame(string id, HomePage.ErrorHandling errorMessage) =>
+             _checkConnection.hasConnection(errorMessage) ? await _customGameProxy.GetGameByID(errorMessage, id) ?? null : null;
 
-                return games != null ? games : null;
 
-            }
-            else
-                return null;            
-        }
+        // A generic method that handles adding to wishlist or completed games and returns true or false based on success //
+        public async Task<bool> AddToWishlistPlayed<T>(HomePage.ErrorHandling errorMessage, T item, string itemChoice) =>
+             // Checks if there is a connection
+             // If there is then it will try to post a an item and return true or false based wether the item was able to be posted or not
+             // If there is no connection then it returns false
+             _checkConnection.hasConnection(errorMessage) ? await _wishlistPlayedProxy.PostItem(errorMessage, item, itemChoice) : false;
 
-        // Retrieves a single game from custom API
-        public async Task<IGame> GetCustomGame(string id, HomePage.ErrorHandling errorMessage)
-        {
 
-            bool connection = _checkConnection.hasConnection(errorMessage);
-            if (connection)
-            {
-                var games = await _customGameProxy.GetGameByID(errorMessage, id);
+        // A generic Delete function that returns true or false based on success //
+        public async Task<bool> DeleteFromWishlistPlayed(HomePage.ErrorHandling errorMessage, string itemChoice, string id) =>
+             _checkConnection.hasConnection(errorMessage) ? await _wishlistPlayedProxy.DeleteItem(errorMessage, itemChoice, id) : false;
 
-                return games != null ? games : null;
-            }
-            else
-                return null;
-        }
-
-        // A generic method that handles adding to wishlist or completed games and returns true or false based on success
-        public async Task<bool> AddToWishlistPlayed<T>(HomePage.ErrorHandling errorMessage, T item, string itemChoice)
-        {
-            bool connection = _checkConnection.hasConnection(errorMessage);
-
-            if (connection)
-               return await _wishlistPlayedProxy.PostItem(errorMessage, item, itemChoice);
-            else
-                return false;
-        }
-
-        // A generic Delete function that returns true or false based on success
-        public async Task<bool> DeleteFromWishlistPlayed(HomePage.ErrorHandling errorMessage, string itemChoice, string id)
-        {
-            bool connection = _checkConnection.hasConnection(errorMessage);
-
-            if (connection)
-                return await _wishlistPlayedProxy.DeleteItem(errorMessage, itemChoice, id);
-            else
-                return false;
-        }
 
         // This method checks if the item they are trying to add is already in the wishlist table
         // Used to switch buttons from add to remove

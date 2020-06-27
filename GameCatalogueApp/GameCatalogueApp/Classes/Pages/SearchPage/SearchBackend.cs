@@ -34,25 +34,26 @@ namespace GameCatalogueApp.Classes
             bool connection = _checkConnection.hasConnection(errorMessage);
             if (connection)
             {
+                // This is short hand for the below code, this makes it more difficult for me and reduces the amount of If statements greatly
+                // Could be shortened even more but it would look much more confusing after removing yet another if statement
+                return !string.IsNullOrEmpty(search) ? await _gameProxy.GetGameBySearch(search, errorMessage) ?? null : await _gameProxy.GetAllGameInfo(errorMessage) ?? null;
+
+                // Original Code
+
                 // If it has something to search for
-                if (!string.IsNullOrEmpty(search))
-                {
-                    // Gets games by search
-                    var games = await _gameProxy.GetGameBySearch(search, errorMessage);
-                    if (games == null)
-                        return null;
-                    else
-                        return games;
-                }
-                else // If their is no input it should grab all games
-                {
-                    // Gets all games
-                    var games = await _gameProxy.GetAllGameInfo(errorMessage);
-                    if (games == null)
-                        return null;
-                    else
-                        return games;
-                }
+                //if (!string.IsNullOrEmpty(search))
+                //{
+                //    // Gets games by search
+                //    var games = await _gameProxy.GetGameBySearch(search, errorMessage);
+                //    return games ?? null;
+
+                //}
+                //else // If their is no input it should grab all games
+                //{
+                //    // Gets all games
+                //    var games = await _gameProxy.GetAllGameInfo(errorMessage);
+                //    return games ?? null;
+                //}
             }
             else
                 return null;
@@ -65,22 +66,8 @@ namespace GameCatalogueApp.Classes
             bool connection = _checkConnection.hasConnection(errorMessage);
             if (connection)
             {
-                if (!string.IsNullOrEmpty(search))
-                {
-                    var games = await _customGameProxy.GetGamesBySearch(errorMessage, search);
-                    if (games == null)
-                        return null;
-                    else
-                        return games;
-                }
-                else
-                {
-                    var games = await _customGameProxy.GetAllGames(errorMessage);
-                    if (games == null)
-                        return null;
-                    else
-                        return games;
-                }
+                // Shorthand code
+                return !string.IsNullOrEmpty(search) ? await _customGameProxy.GetGamesBySearch(errorMessage, search) ?? null : await _customGameProxy.GetAllGames(errorMessage) ?? null;
             }
             else
                 return null;

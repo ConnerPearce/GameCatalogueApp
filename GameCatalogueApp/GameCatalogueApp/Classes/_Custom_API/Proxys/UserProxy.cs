@@ -77,7 +77,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
 
                 var response = await http.PostAsJsonAsync($"{_baseAddress}User", user);
 
-                return await CheckStatusCodes(response, errorMessage) ? true : false;
+                return await CheckStatusCodes(response, errorMessage);
             }            
             catch (Exception ex)
             {
@@ -95,7 +95,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
 
                 var response = await http.PutAsJsonAsync($"{_baseAddress}User", user);
 
-                return await CheckStatusCodes(response, errorMessage) ? true : false;
+                return await CheckStatusCodes(response, errorMessage);
             }
             catch (Exception ex)
             {

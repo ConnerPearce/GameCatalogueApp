@@ -42,7 +42,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
+                
                 <!-- GENRE -->
                 <Label>
                     <Label.FormattedText>

@@ -120,7 +120,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
 
                     HttpResponseMessage response = await http.PostAsJsonAsync($"{_baseAddress}{itemChoice}", item);
 
-                    return CheckStatusCodes(response, errorMessage) ? true : false;
+                    return CheckStatusCodes(response, errorMessage);
                 }
                 else
                 {
@@ -146,7 +146,7 @@ namespace GameCatalogueApp.Classes._Custom_API.Proxys
 
                     HttpResponseMessage response = await http.DeleteAsync($"{_baseAddress}{itemChoice}/{id}");
 
-                    return CheckStatusCodes(response, errorMessage) ? true : false;
+                    return CheckStatusCodes(response, errorMessage);
                 }
                 else
                 {

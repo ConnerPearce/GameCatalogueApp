@@ -210,7 +210,7 @@ namespace GameCatalogueApp.Pages.Search
             }       
         }
 
-        // Gets the item from the list then pushes the unique ID to the game and pushes it to the 
+        // Gets the item from the list then pushes the unique ID to the detailed page
         private async void GetGameFromList(SelectedItemChangedEventArgs e)
         {
             try

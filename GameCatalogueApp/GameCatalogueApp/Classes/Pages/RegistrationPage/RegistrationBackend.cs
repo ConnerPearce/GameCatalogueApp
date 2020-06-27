@@ -25,13 +25,11 @@ namespace GameCatalogueApp.Classes.Pages.RegistrationPage
         }
 
         // Registers the user
-        public async Task<bool> RegisterUser(HomePage.ErrorHandling errorMessage, User user)
-        {
-            bool connection = _checkConnection.hasConnection(errorMessage);
-            if (connection)
-                return await _userProxy.PostUser(errorMessage, user);
-            else
-                return false;
-        }
+        public async Task<bool> RegisterUser(HomePage.ErrorHandling errorMessage, User user) =>
+            // Checks if there is a connection
+            // If there is then it will try to post a user and return true or false based wether the user was able to be posted or not
+            // If there is no connection then it returns false
+            _checkConnection.hasConnection(errorMessage) ? await _userProxy.PostUser(errorMessage, user) : false;
+
     }
 }
